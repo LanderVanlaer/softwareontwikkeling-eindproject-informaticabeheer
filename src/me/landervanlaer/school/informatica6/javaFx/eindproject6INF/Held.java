@@ -7,15 +7,29 @@ import java.util.HashMap;
 public class Held {
     public final static double STRENGTH_AVARAGE = 10.0;
     private final static int[] DEFAULT_CAPACITY = new int[]{115, 130, 150, 175, 200, 230, 260, 300, 350, 400};
+
     public static int DEFAULT_PROTECTION = 10;
-    private final HashMap<AnchorPoints, Object> anchors = new HashMap<>();
-    private double strength = STRENGTH_AVARAGE;
-    private boolean fighting = false;
+
+    private final HashMap<AnchorPoints, Object> anchors;
+    private double strength;
+    private boolean fighting;
     private String name;
     private int maxHitpoints;
     private int hitpoints;
-    private int capacity = getCapacityByStrength(this.getStrength());
-    private int protection = DEFAULT_PROTECTION;
+    private int capacity;
+    private int protection;
+
+    public Held(String name, int hitpoints) {
+        this.name = name;
+        this.hitpoints = hitpoints;
+
+        this.capacity = getCapacityByStrength(this.getStrength());
+        this.maxHitpoints = this.hitpoints;
+        protection = DEFAULT_PROTECTION;
+        fighting = false;
+        anchors = new HashMap<>();
+        strength = STRENGTH_AVARAGE;
+    }
 
     public static boolean isValidProtection(int protection) {
         return protection > 0;
@@ -119,6 +133,6 @@ public class Held {
     public void setMaxHitpoints(int maxHitpoints) {
         if(!isValidMaxHitpoints(maxHitpoints))
             throw new IllegalArgumentException("Maxpoints cannot be 0 or less");
-            this.maxHitpoints = maxHitpoints;
+        this.maxHitpoints = maxHitpoints;
     }
 }
