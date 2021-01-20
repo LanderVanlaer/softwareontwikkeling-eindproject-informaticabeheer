@@ -20,6 +20,15 @@ public class Held {
     private int protection;
 
     public Held(String name, int hitpoints) {
+        if(!name.matches("[A-Z][a-zA-Z ]+'?[a-zA-Z ]*'?[a-zA-Z ]*"))
+            throw new IllegalArgumentException("Naam moet beginnen met een hoofdletter en mag alleen hoofdletters, kleine letters, spaties en ' bevatten");
+
+        if(!isValidMaxHitpoints(hitpoints))
+            throw new IllegalArgumentException("Hitpoints cannot be 0 or less");
+
+        if(!isValidProtection(DEFAULT_PROTECTION))
+            throw new IllegalArgumentException("The given protection is not valid.");
+
         this.name = name;
         this.hitpoints = hitpoints;
 
