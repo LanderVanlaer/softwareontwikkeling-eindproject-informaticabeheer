@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Eindproject 6 informaticabeheer.iml" filepath="$PROJECT_DIR$/Eindproject 6 informaticabeheer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Java-Small-Projects/Java-Small-Projects.iml" filepath="$PROJECT_DIR$/../Java-Small-Projects/Java-Small-Projects.iml" />
+    </modules>
+  </component>
+</project>
