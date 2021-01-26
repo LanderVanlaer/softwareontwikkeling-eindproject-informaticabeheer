@@ -70,6 +70,19 @@ public class Held {
         return maxHitpoints > 0;
     }
 
+    public void hit(Held defender) {
+        final int random = Number.getRandom(0, 21);
+        if(random >= defender.getProtection()) {
+            final int defenderHitpoints = defender.reduceHitpoints((int) getHitStrength());
+
+            // DEATHBLOW
+            if(defenderHitpoints <= 0) {
+                final int max = getMaxHitpoints() - getHitpoints();
+                setHitpoints((int) (getHitpoints() + (max * (Number.getRandom(0, 101) / 2D))));
+            }
+        }
+    }
+
     public String getName() {
         return name;
     }
@@ -79,6 +92,11 @@ public class Held {
             this.name = name;
         else
             throw new IllegalArgumentException("Naam moet beginnen met een hoofdletter en mag alleen hoofdletters, kleine letters, spaties en ' bevatten");
+    }
+
+    public int reduceHitpoints(int subtractor) {
+        setHitpoints(getHitpoints() - subtractor);
+        return getHitpoints();
     }
 
     public int getHitpoints() {
@@ -103,6 +121,10 @@ public class Held {
 
     public void divideStrength(int denominator) {
         setStrength(getStrength() / denominator);
+    }
+
+    public double getHitStrength() {
+        return (getStrength() - 10D) / 2D;
     }
 
     public double getStrength() {
