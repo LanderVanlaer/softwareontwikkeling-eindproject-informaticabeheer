@@ -19,6 +19,10 @@ public class Held {
     private int capacity;
     private int protection;
 
+    public Held() {
+        this("Held", 100);
+    }
+
     public Held(String name, int hitpoints) {
         if(!name.matches("[A-Z][a-zA-Z ]+'?[a-zA-Z ]*'?[a-zA-Z ]*"))
             throw new IllegalArgumentException("Naam moet beginnen met een hoofdletter en mag alleen hoofdletters, kleine letters, spaties en ' bevatten");
