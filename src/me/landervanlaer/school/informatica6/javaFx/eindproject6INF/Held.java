@@ -45,7 +45,7 @@ public class Held {
     }
 
     public static boolean isValidProtection(int protection) {
-        return protection > 0;
+        return protection > 0 && protection < 20;
     }
 
     private static int getClosestPrimeNumber(int number) {
@@ -55,13 +55,13 @@ public class Held {
         return number;
     }
 
-    private static int getCapacityByStrength(double strength) {
+    public static int getCapacityByStrength(double strength) {
         if(strength < 0)
             return 0;
         else if(strength < 11)
             return (int) (strength * 10);
-        else if(strength > 21)
-            return DEFAULT_CAPACITY[(int) strength];
+        else if(strength < 21)
+            return DEFAULT_CAPACITY[(int) strength - 11];
         else
             return getCapacityByStrength(strength - 10) * 4;
     }
@@ -139,8 +139,12 @@ public class Held {
         return capacity;
     }
 
-    public void setCapacity(int capacity) {
+    private void setCapacity(int capacity) {
         this.capacity = capacity;
+    }
+
+    protected void updateCapacity() {
+        setCapacity(getCapacityByStrength(getStrength()));
     }
 
     public int getProtection() {
