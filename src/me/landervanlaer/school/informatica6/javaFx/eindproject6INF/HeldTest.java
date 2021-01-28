@@ -20,7 +20,7 @@ public class HeldTest {
 
     @Test
     public void isValidProtection_Illegal1() {
-        assertFalse(Held.isValidProtection(20));
+        assertFalse(Held.isValidProtection(21));
     }
 
     @Test
@@ -77,6 +77,68 @@ public class HeldTest {
     public void setName_Legal() {
         held100.setName("Hel'd Frans");
         assertEquals("Hel'd Frans", held100.getName());
+    }
+
+    @Test
+    public void constructor0_Legal() {
+        Held held = new Held("Oliver Mc'Donald", 100);
+        assertEquals("Oliver Mc'Donald", held.getName());
+        assertEquals(100, held.getHitpoints());
+    }
+
+    @Test
+    public void constructor1_Legal() {
+        Held held = new Held("Martin Akashiya", 10);
+        assertEquals("Martin Akashiya", held.getName());
+        assertEquals(10, held.getHitpoints());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor0_Illegal() {
+        new Held("ivan Adarsh", 10);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor1_Illegal() {
+        new Held("Ivan Adarsh", -1);
+    }
+
+    @Test
+    public void getClosestPrimeNumber0() {
+        assertEquals(7, Held.getClosestPrimeNumber(10));
+    }
+
+    @Test
+    public void getClosestPrimeNumber1() {
+        assertEquals(1, Held.getClosestPrimeNumber(1));
+    }
+
+    @Test
+    public void getClosestPrimeNumber2() {
+        assertEquals(83, Held.getClosestPrimeNumber(88));
+    }
+
+    @Test
+    public void getClosestPrimeNumber3() {
+        assertEquals(73, Held.getClosestPrimeNumber(73));
+    }
+
+    @Test
+    public void hit0() {
+        Held held = new Held("Held", 100);
+        held.setProtection(0);
+        held.setFighting(true);
+        held100.hit(held);
+        assertEquals(100 - ((Held.STRENGTH_AVARAGE - 10) / 2), held.getHitpoints(), .1);
+    }
+
+    @Test
+    public void hit1() {
+        Held held = new Held("Held", 100);
+        held.setProtection(0);
+        held.setFighting(false);
+        held100.hit(held);
+        assertEquals(Held.getClosestPrimeNumber((int) (100 - ((Held.STRENGTH_AVARAGE - 10) / 2))), held.getHitpoints(), .1);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -138,11 +200,11 @@ public class HeldTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void setProtection_Illegal0() {
-        held100.setProtection(0);
+        held100.setProtection(-1);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void setProtection_Illegal1() {
-        held100.setProtection(0);
+        held100.setProtection(21);
     }
 }

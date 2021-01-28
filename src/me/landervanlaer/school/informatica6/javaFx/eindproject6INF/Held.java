@@ -5,7 +5,7 @@ import me.landervanlaer.math.Number;
 import java.util.HashMap;
 
 public class Held {
-    public final static double STRENGTH_AVARAGE = 10.0;
+    public final static double STRENGTH_AVARAGE = 20.0;
     private final static int[] DEFAULT_CAPACITY = new int[]{115, 130, 150, 175, 200, 230, 260, 300, 350, 400};
 
     public static int DEFAULT_PROTECTION = 10;
@@ -36,12 +36,13 @@ public class Held {
         this.name = name;
         this.hitpoints = hitpoints;
 
-        this.capacity = getCapacityByStrength(this.getStrength());
         this.maxHitpoints = this.hitpoints;
-        protection = DEFAULT_PROTECTION;
-        fighting = false;
-        anchors = new HashMap<>();
-        strength = STRENGTH_AVARAGE;
+        this.protection = DEFAULT_PROTECTION;
+        this.fighting = false;
+        this.anchors = new HashMap<>();
+        this.strength = STRENGTH_AVARAGE;
+
+        this.capacity = getCapacityByStrength(this.strength);
     }
 
     public static boolean isValidName(String name) {
@@ -49,10 +50,10 @@ public class Held {
     }
 
     public static boolean isValidProtection(int protection) {
-        return protection > 0 && protection <= 20;
+        return protection >= 0 && protection <= 20;
     }
 
-    private static int getClosestPrimeNumber(int number) {
+    protected static int getClosestPrimeNumber(int number) {
         while(!Number.isPrimeNumber(number) && number > 1) {
             --number;
         }
