@@ -24,7 +24,7 @@ public class Held {
     }
 
     public Held(String name, int hitpoints) {
-        if(!name.matches("[A-Z][a-zA-Z ]+'?[a-zA-Z ]*'?[a-zA-Z ]*"))
+        if(!isValidName(name))
             throw new IllegalArgumentException("Naam moet beginnen met een hoofdletter en mag alleen hoofdletters, kleine letters, spaties en ' bevatten");
 
         if(!isValidMaxHitpoints(hitpoints))
@@ -44,8 +44,12 @@ public class Held {
         strength = STRENGTH_AVARAGE;
     }
 
+    public static boolean isValidName(String name) {
+        return name.matches("[A-Z][a-zA-Z ]+'?[a-zA-Z ]*'?[a-zA-Z ]*");
+    }
+
     public static boolean isValidProtection(int protection) {
-        return protection > 0 && protection < 20;
+        return protection > 0 && protection <= 20;
     }
 
     private static int getClosestPrimeNumber(int number) {
@@ -77,8 +81,7 @@ public class Held {
 
             // DEATHBLOW
             if(defenderHitpoints <= 0) {
-                final int max = getMaxHitpoints() - getHitpoints();
-                setHitpoints((int) (getHitpoints() + (max * (Number.getRandom(0, 101) / 2D))));
+                setHitpoints((int) (getHitpoints() + ((double) (getMaxHitpoints() - getHitpoints()) * (Number.getRandom(0, 101) / 100D))));
             }
         }
     }
@@ -88,7 +91,7 @@ public class Held {
     }
 
     public void setName(String name) {
-        if(name.matches("[A-Z][a-zA-Z ]+'?[a-zA-Z ]*'?[a-zA-Z ]*"))
+        if(isValidName(name))
             this.name = name;
         else
             throw new IllegalArgumentException("Naam moet beginnen met een hoofdletter en mag alleen hoofdletters, kleine letters, spaties en ' bevatten");
