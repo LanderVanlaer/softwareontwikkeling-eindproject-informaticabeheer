@@ -9,7 +9,13 @@ public class Weapon {
      */
     private final long identification;
 
-    public Weapon() {
+    /**
+     * A number that is positive. To determine the weight of the weapon.
+     */
+    private final double weight;
+
+    public Weapon(double weight) {
+        this.weight = weight;
         this.identification = generateIdentification();
     }
 
@@ -38,7 +44,22 @@ public class Weapon {
         return identification >= 0 && identification % 3 == 0 && identification % 2 == 0;
     }
 
+    /**
+     * Tells whether the given number is positive
+     *
+     * @param weight The number that has to be checked
+     * @return Wheter it is a valid weight for a weapon
+     * @see #weight
+     */
+    public static boolean isValidWeight(long weight) {
+        return weight >= 0;
+    }
+
     public long getIdentification() {
         return identification;
+    }
+
+    public double getWeight() {
+        return weight;
     }
 }

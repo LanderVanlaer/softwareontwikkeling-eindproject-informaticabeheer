@@ -52,4 +52,24 @@ public class WeaponTest {
     public void isValidIdentification_ILLEGAL_POSITIVE_DIVISIBLE2() {
         assertFalse(Weapon.isValidIdentification(100));
     }
+
+    @Test
+    public void isValidWeight_LEGAL0() {
+        assertTrue(Weapon.isValidWeight(10));
+    }
+
+    @Test
+    public void isValidWeight_LEGAL1() {
+        assertTrue(Weapon.isValidWeight(10));
+    }
+
+    @Test
+    public void isValidWeight_ILLEGAL0() {
+        assertFalse(Weapon.isValidWeight(-5));
+    }
+
+    @Test
+    public void isValidWeight_ILLEGAL1() {
+        assertFalse(Weapon.isValidWeight(-8));
+    }
 }
