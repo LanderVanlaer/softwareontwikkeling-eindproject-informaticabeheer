@@ -1,65 +1,64 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF;
 
-import java.util.Random;
+import java.text.MessageFormat;
 
-public class Weapon {
-    private static final Random RANDOM = new Random();
+public class Weapon extends Item {
     /**
-     * A number that is positive, even and divisible by 3. To identify the weapon.
+     * The maximum number the {@link #damage} can have
      */
-    private final long identification;
+    private static final int DAMAGE_MIN = 1;
 
     /**
-     * A number that is positive. To determine the weight of the weapon.
+     * The maximum number the {@link #damage} can have
      */
-    private final double weight;
+    private static int damageMax = 100;
+
+    /**
+     * The damage the weapon can do
+     *
+     * @see #getDamage()
+     * @see #setDamage(int)
+     */
+    private int damage;
 
     public Weapon(double weight) {
-        this.weight = weight;
-        this.identification = generateIdentification();
+        super(weight);
     }
 
     /**
-     * Generates a random number for the {@link #identification}
+     * Checks wheter the given {@code int} is a valid damage number.
+     * <ul>
+     *     <li>{@link #DAMAGE_MIN} < {@link #damage}</li>
+     *     <li>{@link #damageMax} > {@link #damage}</li>
+     *     <li>{@link #damage} divisible by {@code 7}</li>
+     * </ul>
      *
-     * @return A random identification
-     * @see #identification
-     * @see #generateIdentification()
+     * @param damage The number that has to be checked
+     * @return Wheter it is a valid damage number
      */
-    public static long generateIdentification() {
-        long i;
-        do i = RANDOM.nextLong(); while(!isValidIdentification(i));
-        return i;
+    public static boolean isValidDamage(int damage) {
+        return DAMAGE_MIN < damage && damageMax < 100 && damage % 7 == 0;
     }
 
     /**
-     * Tells whether the given number is positive and whether the number is even and divisible by 3
+     * Checks wheter the given long is positive, divisible by {@code 3} & {@code 2}
      *
      * @param identification The number that has to be checked
      * @return Wheter it is a valid identification number
-     * @see #identification
-     * @see #generateIdentification()
+     * @see Item#isValidIdentification(long)
      */
-    public static boolean isValidIdentification(long identification) {
+    @Override
+    public boolean isValidIdentification(long identification) {
         return identification >= 0 && identification % 3 == 0 && identification % 2 == 0;
     }
 
-    /**
-     * Tells whether the given number is positive
-     *
-     * @param weight The number that has to be checked
-     * @return Wheter it is a valid weight for a weapon
-     * @see #weight
-     */
-    public static boolean isValidWeight(long weight) {
-        return weight >= 0;
+    public int getDamage() {
+        return damage;
     }
 
-    public long getIdentification() {
-        return identification;
-    }
-
-    public double getWeight() {
-        return weight;
+    public void setDamage(int damage) throws IllegalArgumentException {
+        if(!isValidDamage(damage))
+            throw new IllegalArgumentException(MessageFormat.format("The given damage {{0}} is not valid", damage));
+        this.damage = damage;
     }
 }
