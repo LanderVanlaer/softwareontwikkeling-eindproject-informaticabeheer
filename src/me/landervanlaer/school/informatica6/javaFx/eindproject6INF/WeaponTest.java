@@ -14,7 +14,8 @@ public class WeaponTest {
 
     @Before
     public void setUp() {
-        this.weapon100 = new Weapon(100, 10);
+        Weapon.damageMax = 100;
+        this.weapon100 = new Weapon(98, 10);
     }
 
     @Test
@@ -78,5 +79,30 @@ public class WeaponTest {
     @Test
     public void isValidWeight_ILLEGAL1() {
         assertFalse(weapon100.isValidWeight(-8));
+    }
+
+    @Test
+    public void isValidDamage_LEGAL0() {
+        assertTrue(Weapon.isValidDamage(7));
+    }
+
+    @Test
+    public void isValidDamage_LEGAL1() {
+        assertTrue(Weapon.isValidDamage(84));
+    }
+
+    @Test
+    public void isValidDamage_ILLEGAL0() {
+        assertFalse(Weapon.isValidDamage(64));
+    }
+
+    @Test
+    public void isValidDamage_ILLEGAL1() {
+        assertFalse(Weapon.isValidDamage(-8));
+    }
+
+    @Test
+    public void isValidDamage_ILLEGAL2() {
+        assertFalse(Weapon.isValidDamage(777));
     }
 }
