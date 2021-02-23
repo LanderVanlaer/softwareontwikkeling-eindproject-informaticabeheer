@@ -19,6 +19,8 @@ abstract public class Item {
     private Held holder;
 
     public Item(double weight) {
+        if(weight < 0) weight = 0;
+
         this.weight = weight;
         this.identification = generateIdentification();
     }
