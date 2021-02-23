@@ -21,8 +21,13 @@ public class Weapon extends Item {
      */
     private int damage;
 
-    public Weapon(double weight) {
+    public Weapon(int damage, double weight) {
         super(weight);
+
+        if(DAMAGE_MIN >= damage || damageMax >= 100 || damage % 7 != 0)
+            throw new IllegalArgumentException(MessageFormat.format("The given damage {{0}} is not valid", damage));
+
+        this.damage = damage;
     }
 
     /**

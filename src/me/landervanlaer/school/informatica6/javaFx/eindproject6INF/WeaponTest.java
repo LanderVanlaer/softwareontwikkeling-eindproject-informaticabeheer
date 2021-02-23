@@ -14,7 +14,7 @@ public class WeaponTest {
 
     @Before
     public void setUp() {
-        this.weapon100 = new Weapon(100);
+        this.weapon100 = new Weapon(100, 10);
     }
 
     @Test
