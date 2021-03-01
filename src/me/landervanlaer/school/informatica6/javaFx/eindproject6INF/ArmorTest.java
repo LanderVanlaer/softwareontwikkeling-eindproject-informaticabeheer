@@ -31,22 +31,22 @@ public class ArmorTest {
 
     @Test
     public void isValidIdentification_LEGAL0() {
-        assertTrue(armor50_20.isValidIdentification(10000000019L));
+        assertTrue(Armor.isValidIdentification(7919L));
     }
 
     @Test
     public void isValidIdentification_LEGAL1() {
-        assertTrue(armor50_20.isValidIdentification(11L));
+        assertTrue(Armor.isValidIdentification(11L));
     }
 
     @Test
     public void isValidIdentification_ILLEGAL0() {
-        assertFalse(armor50_20.isValidIdentification(10000000021L));
+        assertFalse(Armor.isValidIdentification(10000000022L));
     }
 
     @Test
     public void isValidIdentification_ILLEGAL1() {
-        assertFalse(armor50_20.isValidIdentification(10L));
+        assertFalse(Armor.isValidIdentification(10L));
     }
 
     @Test

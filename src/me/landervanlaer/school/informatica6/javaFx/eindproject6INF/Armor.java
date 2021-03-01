@@ -38,11 +38,15 @@ public class Armor extends Item {
      *
      * @param identification The number that has to be checked
      * @return Wheter it is a valid identification number
-     * @see Item#isValidIdentification(long)
+     * @see Item#canHaveIdentification(long)
      */
-    @Override
-    public boolean isValidIdentification(long identification) {
+    public static boolean isValidIdentification(long identification) {
         return Number.isPrimeNumber(identification);
+    }
+
+    @Override
+    protected boolean canHaveIdentification(long identification) {
+        return Armor.isValidIdentification(identification);
     }
 
     public int getProtection() {

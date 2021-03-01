@@ -45,14 +45,18 @@ public class Weapon extends Item {
         return DAMAGE_MIN < damage && damage <= damageMax && damage % 7 == 0;
     }
 
+    @Override
+    public boolean canHaveIdentification(long identification) {
+        return isValidIdentification(identification);
+    }
+
     /**
      * Checks wheter the given long is positive, divisible by {@code 3} & {@code 2}
      *
      * @param identification The number that has to be checked
      * @return Wheter it is a valid identification number
-     * @see Item#isValidIdentification(long)
+     * @see Item#canHaveIdentification(long)
      */
-    @Override
     public boolean isValidIdentification(long identification) {
         return identification >= 0 && identification % 3 == 0 && identification % 2 == 0;
     }

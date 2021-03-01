@@ -24,7 +24,7 @@ public class WeaponTest {
 
         while(longs.size() < 1000) {
             final long l = weapon100.generateIdentification();
-            assertTrue(weapon100.isValidIdentification(l));
+            assertTrue(weapon100.canHaveIdentification(l));
             assertFalse(longs.contains(l));
             longs.add(l);
         }
@@ -32,33 +32,33 @@ public class WeaponTest {
 
     @Test
     public void isValidIdentification_LEGALCASE0() {
-        assertTrue(weapon100.isValidIdentification(90));
+        assertTrue(weapon100.canHaveIdentification(90));
     }
 
     @Test
     public void isValidIdentification_LEGALCASE1() {
-        assertTrue(weapon100.isValidIdentification(6));
+        assertTrue(weapon100.canHaveIdentification(6));
     }
 
     @Test
     public void isValidIdentification_LEGALCASE2() {
-        assertTrue(weapon100.isValidIdentification(9223372036854775806L));
+        assertTrue(weapon100.canHaveIdentification(9223372036854775806L));
     }
 
     @Test
     public void isValidIdentification_ILLEGAL_NEGATIVE() {
-        assertFalse(weapon100.isValidIdentification(-9223372036854775806L));
+        assertFalse(weapon100.canHaveIdentification(-9223372036854775806L));
     }
 
     @Test
     public void isValidIdentification_ILLEGAL_POSITIVE_DIVISIBLE3() {
-        assertFalse(weapon100.isValidIdentification(99));
+        assertFalse(weapon100.canHaveIdentification(99));
     }
 
 
     @Test
     public void isValidIdentification_ILLEGAL_POSITIVE_DIVISIBLE2() {
-        assertFalse(weapon100.isValidIdentification(100));
+        assertFalse(weapon100.canHaveIdentification(100));
     }
 
     @Test

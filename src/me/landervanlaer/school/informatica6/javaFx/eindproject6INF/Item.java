@@ -30,11 +30,11 @@ abstract public class Item {
      *
      * @return A random identification number
      * @see #identification
-     * @see #isValidIdentification(long)
+     * @see #canHaveIdentification(long)
      */
     protected long generateIdentification() {
         long i;
-        do i = RANDOM.nextLong(); while(!isValidIdentification(i));
+        do i = RANDOM.nextInt(); while(!canHaveIdentification(i));
         return i;
     }
 
@@ -57,7 +57,7 @@ abstract public class Item {
      * @see #identification
      * @see #generateIdentification()
      */
-    abstract public boolean isValidIdentification(long identification);
+    abstract protected boolean canHaveIdentification(long identification);
 
     public long getIdentification() {
         return identification;
