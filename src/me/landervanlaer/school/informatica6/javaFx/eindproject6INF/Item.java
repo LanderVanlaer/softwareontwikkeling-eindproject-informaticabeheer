@@ -59,6 +59,10 @@ abstract public class Item {
      */
     abstract protected boolean canHaveIdentification(long identification);
 
+    public void destroy() {
+        this.setHolder(null);
+    }
+
     public long getIdentification() {
         return identification;
     }

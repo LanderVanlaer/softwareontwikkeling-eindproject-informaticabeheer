@@ -10,7 +10,7 @@ public class Held {
 
     public static int DEFAULT_PROTECTION = 10;
 
-    private final HashMap<AnchorPoints, Object> anchors;
+    private final HashMap<AnchorPoints, Item> anchors;
     private double strength;
     private boolean fighting;
     private String name;
@@ -73,6 +73,48 @@ public class Held {
 
     public static boolean isValidMaxHitpoints(int maxHitpoints) {
         return maxHitpoints > 0;
+    }
+
+    public boolean canHaveItem(Item item) {
+        if(getAnchors().containsValue(item)) return true;
+
+        if(item instanceof Armor) {
+            return getAnchors().values().stream().filter(i -> i instanceof Armor).count() < 2;
+        }
+
+        return true;
+    }
+
+    public void throwItem(AnchorPoints anchorPoint) {
+        final Item item = takeItem(anchorPoint);
+        if(item != null) item.destroy();
+    }
+
+    public void swapItems(AnchorPoints a1, AnchorPoints a2) {
+        final Item temp = getAnchors().put(a1, getAnchors().get(a2));
+        getAnchors().put(a2, temp);
+    }
+
+    public Item putItem(Item item, AnchorPoints anchorPoint) throws NullPointerException, IllegalArgumentException {
+        if(item == null)
+            throw new NullPointerException("Item can not be null, use Held.throwItem(AnchorPoints) insted");
+        if(!canHaveItem(item))
+            throw new IllegalArgumentException("Can't hold item with id:" + item.getIdentification());
+
+        item.setHolder(this);
+
+        final Item prev = getAnchors().put(anchorPoint, item);
+
+        if(prev != null) prev.setHolder(null);
+
+        return prev;
+    }
+
+    public Item takeItem(AnchorPoints anchorPoint) {
+        final Item item = getAnchors().get(anchorPoint);
+        if(item != null)
+            item.setHolder(null);
+        return item;
     }
 
     public void hit(Held defender) {
@@ -177,5 +219,17 @@ public class Held {
         if(!isValidMaxHitpoints(maxHitpoints))
             throw new IllegalArgumentException("Maxpoints cannot be 0 or less");
         this.maxHitpoints = maxHitpoints;
+    }
+
+    public int getRemainingCapacity() {
+        return getCapacity() - getTotalCarryingWeight();
+    }
+
+    public int getTotalCarryingWeight() {
+        return (int) getAnchors().values().stream().mapToDouble(Item::getWeight).sum();
+    }
+
+    private HashMap<AnchorPoints, Item> getAnchors() {
+        return anchors;
     }
 }
