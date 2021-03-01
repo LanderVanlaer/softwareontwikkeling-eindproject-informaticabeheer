@@ -119,7 +119,7 @@ public class Held {
 
     public void hit(Held defender) {
         final int random = Number.getRandom(0, 21);
-        if(random >= defender.getProtection()) {
+        if(random >= defender.getFullProtection()) {
             final int defenderHitpoints = defender.reduceHitpoints((int) getHitStrength());
 
             // DEATHBLOW
@@ -127,6 +127,15 @@ public class Held {
                 setHitpoints((int) (getHitpoints() + ((double) (getMaxHitpoints() - getHitpoints()) * (Number.getRandom(0, 101) / 100D))));
             }
         }
+    }
+
+    private int getFullProtection() {
+        final Item item = getAnchors().get(AnchorPoints.BODY);
+        
+        if(item instanceof Armor)
+            return getProtection() + ((Armor) item).getProtection();
+
+        return getProtection();
     }
 
     public String getName() {

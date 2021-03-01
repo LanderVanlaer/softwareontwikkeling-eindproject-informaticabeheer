@@ -3,8 +3,7 @@ package me.landervanlaer.school.informatica6.javaFx.eindproject6INF;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ArmorTest {
     private Armor armor50_20;
@@ -51,9 +50,18 @@ public class ArmorTest {
 
     @Test
     public void getProtection() {
+        assertEquals(20, armor50_20.getProtection());
     }
 
     @Test
-    public void setProtection() {
+    public void setProtection_LEGAL() {
+        armor50_20.setProtection(50);
+        assertEquals(50, armor50_20.getProtection());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setProtection_ILLEGAL() {
+        armor50_20.setProtection(1000);
+        assertEquals(20, armor50_20.getProtection());
     }
 }
