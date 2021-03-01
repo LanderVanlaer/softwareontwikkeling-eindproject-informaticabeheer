@@ -120,7 +120,7 @@ public class Held {
     public void hit(Held defender) {
         final int random = Number.getRandom(0, 21);
         if(random >= defender.getFullProtection()) {
-            final int defenderHitpoints = defender.reduceHitpoints((int) getHitStrength());
+            final int defenderHitpoints = defender.reduceHitpoints((int) getFullHitStrength());
 
             // DEATHBLOW
             if(defenderHitpoints <= 0) {
@@ -129,9 +129,23 @@ public class Held {
         }
     }
 
+    private double getFullHitStrength() {
+        double s = getHitStrength();
+
+        final Item lh = getAnchors().get(AnchorPoints.LEFT_HAND);
+        if(lh instanceof Weapon)
+            s += ((Weapon) lh).getDamage();
+
+        final Item rh = getAnchors().get(AnchorPoints.RIGHT_HAND);
+        if(rh instanceof Weapon)
+            s += ((Weapon) rh).getDamage();
+
+        return s;
+    }
+
     private int getFullProtection() {
         final Item item = getAnchors().get(AnchorPoints.BODY);
-        
+
         if(item instanceof Armor)
             return getProtection() + ((Armor) item).getProtection();
 
