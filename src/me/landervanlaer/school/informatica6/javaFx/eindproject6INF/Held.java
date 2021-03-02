@@ -82,7 +82,7 @@ public class Held {
             return getAnchors().values().stream().filter(i -> i instanceof Armor).count() < 2;
         }
 
-        return true;
+        return !(getRemainingCapacity() - item.getWeight() < 0);
     }
 
     public void throwItem(AnchorPoints anchorPoint) {
