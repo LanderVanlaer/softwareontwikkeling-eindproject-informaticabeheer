@@ -185,11 +185,13 @@ public class Held {
     }
 
     public void multiplyStrength(int multiplier) {
-        setStrength(getStrength() * multiplier);
+        if(multiplier > 0)
+            setStrength(getStrength() * multiplier);
     }
 
     public void divideStrength(int denominator) {
-        setStrength(getStrength() / denominator);
+        if(denominator > 0)
+            setStrength(getStrength() / denominator);
     }
 
     public double getHitStrength() {
