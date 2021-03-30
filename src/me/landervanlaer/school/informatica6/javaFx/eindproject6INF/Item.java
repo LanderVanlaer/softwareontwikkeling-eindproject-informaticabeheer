@@ -16,7 +16,7 @@ abstract public class Item {
     /**
      * The hero who owns the item
      */
-    private Held holder;
+    private Item holder;
 
     public Item(double weight) {
         if(weight < 0) weight = 0;
@@ -71,11 +71,11 @@ abstract public class Item {
         return weight;
     }
 
-    public Held getHolder() {
+    public Hero getHolder() {
         return holder;
     }
 
-    public void setHolder(Held holder) {
+    public void setHolder(Hero holder) {
         this.holder = holder;
     }
 }
