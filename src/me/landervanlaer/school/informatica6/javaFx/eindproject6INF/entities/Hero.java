@@ -1,5 +1,6 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities;
 
+import me.landervanlaer.math.Number;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.AnchorPoint;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Armor;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
@@ -33,6 +34,18 @@ public class Hero extends Entity {
 
     public static boolean isValidName(String name) {
         return name.matches("[A-Z][a-zA-Z ]+'?[a-zA-Z ]*'?[a-zA-Z ]*");
+    }
+
+    public void hit(Entity entity) {
+        final int random = Number.getRandom(0, 21);
+        if(random >= entity.getProtectionForHit()) {
+            entity.reduceHitpoints((int) ((this.getStrengthOfHit() - 10D) / 2D));
+
+            // DEATHBLOW
+            if(entity.getHitpoints() <= 0) {
+                heal();
+            }
+        }
     }
 
     @Override

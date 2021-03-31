@@ -11,7 +11,7 @@ public class Weapon extends Item {
     /**
      * The maximum number the {@link #damage} can have
      */
-    protected static int damageMax = 100;
+    private static int damageMax = 100;
 
     /**
      * The damage the weapon can do
@@ -24,7 +24,7 @@ public class Weapon extends Item {
     public Weapon(int damage, double weight) {
         super(weight);
 
-        if(DAMAGE_MIN > damage || damage > damageMax || damage % 7 != 0)
+        if(damage < DAMAGE_MIN || damage > damageMax || damage % 7 != 0)
             throw new IllegalArgumentException(MessageFormat.format("The given damage '{'{0}'}' is not valid", damage));
 
         this.damage = damage;
@@ -69,5 +69,13 @@ public class Weapon extends Item {
         if(!isValidDamage(damage))
             throw new IllegalArgumentException(MessageFormat.format("The given damage '{'{0}'}' is not valid", damage));
         this.damage = damage;
+    }
+
+    public static int getDamageMax() {
+        return damageMax;
+    }
+
+    public static void setDamageMax(int damageMax) {
+        Weapon.damageMax = damageMax;
     }
 }

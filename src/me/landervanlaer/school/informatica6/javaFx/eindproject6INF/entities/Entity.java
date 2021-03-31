@@ -3,6 +3,7 @@ package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities;
 import me.landervanlaer.math.Number;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.AnchorPoint;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Armor;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Backpack;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
 
 import java.text.MessageFormat;
@@ -42,7 +43,7 @@ public abstract class Entity {
 
     }
 
-    protected HashMap<AnchorPoint, Item> getAnchors() {
+    public HashMap<AnchorPoint, Item> getAnchors() {
         return anchors;
     }
 
@@ -79,11 +80,36 @@ public abstract class Entity {
         getAnchors().put(a2, temp);
     }
 
+    public Backpack getBackpack(){
+        return (Backpack) getAnchors().values().stream().filter(item -> item instanceof Backpack).findFirst().orElse(null);
+    }
+
+    public void addItem(Item item) throws NullPointerException, IllegalArgumentException {
+        if(item == null)
+            throw new NullPointerException("Item can not be null, use Entity.throwItem(AnchorPoint) instead");
+        if(!canHaveItem(item))
+            throw new IllegalArgumentException("Can not hold item with id:" + item.getIdentification());
+
+        item.setHolder(this);
+
+        for(AnchorPoint a : AnchorPoint.values()) {
+            if(getAnchors().get(a) == null) {
+                putItem(item, a);
+                return;
+            };
+        }
+
+        final Backpack backpack = getBackpack();
+        if(backpack != null && backpack.canAddItem(item)){
+            backpack.addItem(item);
+        }
+    }
+
     public Item putItem(Item item, AnchorPoint anchorPoint) throws NullPointerException, IllegalArgumentException {
         if(item == null)
             throw new NullPointerException("Item can not be null, use Entity.throwItem(AnchorPoint) instead");
         if(!canHaveItem(item))
-            throw new IllegalArgumentException("Can npt hold item with id:" + item.getIdentification());
+            throw new IllegalArgumentException("Can not hold item with id:" + item.getIdentification());
 
         item.setHolder(this);
 
@@ -101,22 +127,7 @@ public abstract class Entity {
         return item;
     }
 
-    public void collect() {
-        // TODO: 29/03/2021 collect
-    }
-
-    public void hit(Entity entity) {
-        // TODO: 31/03/2021 hit -> abstract
-        final int random = Number.getRandom(0, 21);
-        if(random >= entity.getProtectionForHit()) {
-            entity.reduceHitpoints((int) ((this.getStrengthOfHit() - 10D) / 2D));
-
-            // DEATHBLOW
-            if(entity.getHitpoints() <= 0) {
-                heal();
-            }
-        }
-    }
+    public abstract void hit(Entity entity);
 
     public void heal() {
         setHitpoints((int) (getHitpoints() + ((double) (getMaxHitpoints() - getHitpoints()) * (Number.getRandom(0, 101) / 100D))));

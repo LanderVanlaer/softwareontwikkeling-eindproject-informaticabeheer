@@ -53,9 +53,13 @@ public class Armor extends Item {
         return protection;
     }
 
-    public void setProtection(int protection) {
+    public void setProtection(int protection) throws IllegalArgumentException {
         if(!isValidProtection(protection))
             throw new IllegalArgumentException(MessageFormat.format("The given protection '{'{0}'}' is not valid", protection));
         this.protection = protection;
+    }
+
+    public void reduceProtection(int i) throws IllegalArgumentException {
+        setProtection(getProtection() - i);
     }
 }

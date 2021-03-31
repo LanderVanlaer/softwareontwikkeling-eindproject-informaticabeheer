@@ -14,7 +14,7 @@ public class WeaponTest {
 
     @Before
     public void setUp() {
-        Weapon.damageMax = 100;
+        Weapon.setDamageMax(100);
         this.weapon100 = new Weapon(98, 10);
     }
 

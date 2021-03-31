@@ -10,7 +10,7 @@ public class ArmorTest {
 
     @Before
     public void setUp() {
-        this.armor50_20 = new Armor(50, 20);
+        this.armor50_20 = new Armor(20, 50);
     }
 
     @Test
