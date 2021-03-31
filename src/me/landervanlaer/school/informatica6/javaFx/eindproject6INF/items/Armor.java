@@ -14,7 +14,7 @@ public class Armor extends Item {
      */
     private int protection;
 
-    public Armor(double weight, int protection) {
+    public Armor(int protection, double weight) {
         super(weight);
         this.protection = protection;
     }
