@@ -1,4 +1,4 @@
-package me.landervanlaer.school.informatica6.javaFx.eindproject6INF;
+package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items;
 
 import org.junit.Before;
 import org.junit.Test;

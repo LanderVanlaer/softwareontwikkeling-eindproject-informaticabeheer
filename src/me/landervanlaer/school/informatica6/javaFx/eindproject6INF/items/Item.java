@@ -1,4 +1,6 @@
-package me.landervanlaer.school.informatica6.javaFx.eindproject6INF;
+package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items;
+
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Entity;
 
 import java.util.Random;
 
@@ -16,7 +18,7 @@ abstract public class Item {
     /**
      * The hero who owns the item
      */
-    private Item holder;
+    private Entity holder;
 
     public Item(double weight) {
         if(weight < 0) weight = 0;
@@ -71,11 +73,11 @@ abstract public class Item {
         return weight;
     }
 
-    public Hero getHolder() {
+    public Entity getHolder() {
         return holder;
     }
 
-    public void setHolder(Hero holder) {
-        this.holder = holder;
+    public void setHolder(Entity entity) {
+        this.holder = entity;
     }
 }
