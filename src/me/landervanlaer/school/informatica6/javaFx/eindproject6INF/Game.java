@@ -26,6 +26,8 @@ public class Game {
     }
 
     public static void printItems(Entity entity) {
+        System.out.println();
+        System.out.println(entity.getName());
         System.out.println("Total weight carrying: " + entity.getTotalCarryingWeight());
         System.out.println("Total HP: " + entity.getHitpoints());
         System.out.println("Items:");
