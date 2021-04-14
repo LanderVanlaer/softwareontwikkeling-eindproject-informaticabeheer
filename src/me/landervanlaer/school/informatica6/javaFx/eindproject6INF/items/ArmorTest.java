@@ -1,4 +1,4 @@
-package me.landervanlaer.school.informatica6.javaFx.eindproject6INF;
+package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +10,7 @@ public class ArmorTest {
 
     @Before
     public void setUp() {
-        this.armor50_20 = new Armor(50, 20);
+        this.armor50_20 = new Armor(20, 50);
     }
 
     @Test

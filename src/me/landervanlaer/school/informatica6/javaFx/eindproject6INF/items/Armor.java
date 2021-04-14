@@ -1,4 +1,4 @@
-package me.landervanlaer.school.informatica6.javaFx.eindproject6INF;
+package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items;
 
 import me.landervanlaer.math.Number;
 
@@ -14,7 +14,7 @@ public class Armor extends Item {
      */
     private int protection;
 
-    public Armor(double weight, int protection) {
+    public Armor(int protection, double weight) {
         super(weight);
         this.protection = protection;
     }
@@ -53,9 +53,13 @@ public class Armor extends Item {
         return protection;
     }
 
-    public void setProtection(int protection) {
+    public void setProtection(int protection) throws IllegalArgumentException {
         if(!isValidProtection(protection))
             throw new IllegalArgumentException(MessageFormat.format("The given protection '{'{0}'}' is not valid", protection));
         this.protection = protection;
+    }
+
+    public void reduceProtection(int i) throws IllegalArgumentException {
+        setProtection(getProtection() - i);
     }
 }
