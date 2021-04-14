@@ -171,6 +171,9 @@ public abstract class Entity {
 
     public void setFighting(boolean fighting) {
         this.fighting = fighting;
+        if(!fighting){
+            setHitpoints(getHitpoints());
+        }
     }
 
     public int getHitpoints() {
