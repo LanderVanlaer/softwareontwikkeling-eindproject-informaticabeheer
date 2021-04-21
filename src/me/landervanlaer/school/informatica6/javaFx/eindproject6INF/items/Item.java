@@ -1,83 +1,54 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items;
 
+import javafx.scene.canvas.GraphicsContext;
+import me.landervanlaer.math.Coordinate;
+import me.landervanlaer.objects.Drawable;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Entity;
 
-import java.util.Random;
-
-abstract public class Item {
-    protected static final Random RANDOM = new Random();
-
+public abstract class Item implements Drawable {
     /**
-     * A unique number that identifies the element
+     * The mass of the element
      */
-    private final long identification;
-    /**
-     * The weight of the element
-     */
-    private final double weight;
+    private final double mass;
     /**
      * The hero who owns the item
      */
     private Entity holder;
 
-    public Item(double weight) {
-        if(weight < 0) weight = 0;
+    private Coordinate pos;
 
-        this.weight = weight;
-        this.identification = generateIdentification();
+    public Item(double mass, Coordinate pos) {
+        if(mass < 0) mass = 0;
+        this.mass = mass;
+        this.pos = pos;
     }
 
-    /**
-     * Generates a random number for the {@link #identification}
-     *
-     * @return A random identification number
-     * @see #identification
-     * @see #canHaveIdentification(long)
-     */
-    protected long generateIdentification() {
-        long i;
-        do i = RANDOM.nextInt(); while(!canHaveIdentification(i));
-        return i;
+    public Item(double mass) {
+        this(mass, null);
     }
 
-    /**
-     * Tells whether the given number is a valid weight
-     *
-     * @param weight The number that has to be checked
-     * @return Wheter it is a valid weight for a weapon
-     * @see #weight
-     */
-    public boolean isValidWeight(long weight) {
-        return weight >= 0;
+    @Override
+    public void draw(GraphicsContext gc) {
+        // TODO: 21/04/2021 draw item
     }
 
-    /**
-     * Tells whether the given number is a valid identification number
-     *
-     * @param identification The number that has to be checked
-     * @return Wheter it is a valid identification number
-     * @see #identification
-     * @see #generateIdentification()
-     */
-    abstract protected boolean canHaveIdentification(long identification);
-
-    public void destroy() {
-        this.setHolder(null);
+    public Coordinate getPos() {
+        return pos;
     }
 
-    public long getIdentification() {
-        return identification;
+    public void setPos(Coordinate pos) {
+        this.pos = pos;
     }
 
-    public double getWeight() {
-        return weight;
+    public double getMass() {
+        return mass;
     }
 
     public Entity getHolder() {
         return holder;
     }
 
-    public void setHolder(Entity entity) {
-        this.holder = entity;
+    public void setHolder(Entity holder) {
+        this.holder = holder;
     }
 }

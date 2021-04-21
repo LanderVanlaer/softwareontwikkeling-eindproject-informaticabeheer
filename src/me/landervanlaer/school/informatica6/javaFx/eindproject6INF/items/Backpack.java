@@ -6,35 +6,30 @@ import java.util.List;
 
 public class Backpack extends Item {
     private final List<Item> items;
-    private final double maxWeight;
+    private final double maxMass;
 
-    public Backpack(double maxWeight, double weight, Item... items) {
-        this(maxWeight, weight);
+    public Backpack(double maxMass, double weight, Item... items) {
+        this(maxMass, weight);
         for(Item item : items) if(item != null) this.items.add(item);
     }
 
-    public Backpack(double maxWeight, double weight) {
+    public Backpack(double maxMass, double weight) {
         super(weight);
         this.items = new LinkedList<>();
-        this.maxWeight = maxWeight <= 1 ? 1 : maxWeight;
+        this.maxMass = maxMass <= 1 ? 1 : maxMass;
     }
 
     @Override
-    protected boolean canHaveIdentification(long identification) {
-        return identification > 0;
+    public double getMass() {
+        return super.getMass() + getMassInBackpack();
     }
 
-    @Override
-    public double getWeight() {
-        return super.getWeight() + getWeightInBackpack();
-    }
-
-    public double getWeightInBackpack() {
-        return getItems().stream().mapToDouble(Item::getWeight).sum();
+    public double getMassInBackpack() {
+        return getItems().stream().mapToDouble(Item::getMass).sum();
     }
 
     public boolean canAddItem(Item item) {
-        return getWeightInBackpack() + item.getWeight() < getMaxWeight();
+        return getMassInBackpack() + item.getMass() < getMaxMass();
     }
 
     public Item takeItem(int i) throws IndexOutOfBoundsException {
@@ -47,42 +42,26 @@ public class Backpack extends Item {
         return getItems().get(i);
     }
 
-    public void addItem(Item item) throws NullPointerException, MaxWeightExceeded {
+    public void addItem(Item item) throws NullPointerException, MaxMassExceeded {
         if(item == null)
             throw new NullPointerException();
         if(!canAddItem(item))
-            throw new MaxWeightExceeded();
+            throw new MaxMassExceeded();
         getItems().add(item);
-    }
-
-    public Item getItemByIdentification(long id) throws ItemNotFound {
-        for(Item item : getItems())
-            if(item.getIdentification() == id)
-                return item;
-        throw new ItemNotFound();
-    }
-
-    public boolean hasItemWithIdentification(long id) {
-        for(Item item : getItems()) if(item.getIdentification() == id) return true;
-        return false;
     }
 
     public boolean isValidIndexOfItems(int i) {
         return i >= 0 && i < getItems().size();
     }
 
-    public double getMaxWeight() {
-        return maxWeight;
+    public double getMaxMass() {
+        return maxMass;
     }
 
     private List<Item> getItems() {
         return items;
     }
 
-    public static class ItemNotFound extends IllegalArgumentException {
-    }
-
-
-    public static class MaxWeightExceeded extends IllegalArgumentException {
+    public static class MaxMassExceeded extends IllegalArgumentException {
     }
 }
