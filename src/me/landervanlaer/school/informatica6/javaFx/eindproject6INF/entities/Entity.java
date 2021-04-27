@@ -24,13 +24,22 @@ abstract public class Entity extends Mover {
     }
 
     public void hit(Bullet bullet) {
+        bullet.stop();
+
+        int damage = bullet.getDamage();
+
         final Item bodyItem = getAnchorPoints().get(AnchorPoint.BODY);
         if(bodyItem instanceof Armor) {
             Armor armor = (Armor) bodyItem;
-            int damageLeft = armor.reduceProtection(bullet.getDamage());
-            reduceHp(damageLeft);
-            bullet.stop();
+            damage = armor.reduceProtection(damage);
+
+            if(damage > 0) {
+                armor.setHolder(null);
+                this.getAnchorPoints().remove(AnchorPoint.BODY);
+            }
         }
+
+        reduceHp(damage);
     }
 
     public void reduceHp(int hp) {
