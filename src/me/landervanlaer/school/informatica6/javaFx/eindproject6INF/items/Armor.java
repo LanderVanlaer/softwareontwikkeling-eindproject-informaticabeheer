@@ -1,5 +1,7 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items;
 
+import me.landervanlaer.math.Number;
+
 import java.text.MessageFormat;
 
 public class Armor extends Item {
@@ -27,7 +29,11 @@ public class Armor extends Item {
         this.protection = protection;
     }
 
-    public void reduceProtection(int i) throws IllegalArgumentException {
+    public int reduceProtection(int i) throws IllegalArgumentException {
+        final int pro = i - getProtection();
+
         setProtection(getProtection() - i);
+
+        return Number.constrain(pro, 0, Integer.MAX_VALUE);
     }
 }

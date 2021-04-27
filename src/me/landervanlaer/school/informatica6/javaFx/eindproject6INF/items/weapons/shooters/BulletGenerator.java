@@ -7,31 +7,31 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons
 public class BulletGenerator {
     private final double vel;
     private final int fireRate;
-    private final double damage;
+    private final int damage;
     private long prevFire;
 
-    public BulletGenerator(double vel, int fireRate, double damage) {
+    public BulletGenerator(double vel, int fireRate, int damage) {
         this.vel = vel;
         this.fireRate = fireRate;
         this.damage = damage;
     }
 
-    public Bullet generate(Magazine magazine, Coordinate pos, Coordinate headedTo) throws Magazine.EmptyMagazineException, FiringTooFast {
-        if(magazine.isEmpty())
+    public Bullet generate(Shooter<?> shooter, Coordinate headedTo) throws Magazine.EmptyMagazineException, FiringTooFast {
+        if(shooter.getMagazine().isEmpty())
             throw new Magazine.EmptyMagazineException();
 
         if(!canFire())
             throw new FiringTooFast();
 
 
-        Vector vel = new Vector(pos, headedTo);
+        Vector vel = new Vector(shooter.getPos(), headedTo);
         vel.setMag(getVel());
 
-        magazine.fireBullet();
-        return new Bullet(getDamage(), pos, vel);
+        shooter.getMagazine().fireBullet();
+        return new Bullet(getDamage(), shooter.getPos(), vel);
     }
 
-    public double getDamage() {
+    public int getDamage() {
         return damage;
     }
 

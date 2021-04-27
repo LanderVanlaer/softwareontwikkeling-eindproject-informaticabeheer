@@ -27,7 +27,7 @@ public abstract class Shooter<M extends Magazine> extends Weapon {
 
     public Bullet getBullet(Coordinate heading) throws Magazine.EmptyMagazineException {
         try {
-            return getBulletGenerator().generate(getMagazine(), getHolder().getPos(), heading);
+            return getBulletGenerator().generate(this, heading);
         } catch(BulletGenerator.FiringTooFast ignored) {
             return null;
         }

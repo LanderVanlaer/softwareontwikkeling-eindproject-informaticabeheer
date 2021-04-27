@@ -1,7 +1,6 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items;
 
-import me.landervanlaer.util.lists.LinkedList;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class Backpack extends Item {
@@ -15,7 +14,7 @@ public class Backpack extends Item {
 
     public Backpack(double maxMass, double weight) {
         super(weight);
-        this.items = new LinkedList<>();
+        this.items = new ArrayList<>();
         this.maxMass = maxMass <= 1 ? 1 : maxMass;
     }
 
