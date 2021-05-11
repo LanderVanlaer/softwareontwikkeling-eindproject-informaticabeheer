@@ -3,7 +3,6 @@ package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import me.landervanlaer.math.Coordinate;
-import me.landervanlaer.math.Number;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
 
 public abstract class Draw {
@@ -28,7 +27,7 @@ public abstract class Draw {
 
     public static Coordinate relativeCoordinate(Coordinate c) {
         final Coordinate pos = Game.getInstance().getViewBox().getPos();
-        return new Coordinate(Number.constrain(c.getX() - pos.getX(), 0, 450), Number.constrain(c.getY() - pos.getY(), 0, 450));
+        return new Coordinate(c.getX() - pos.getX(), c.getY() - pos.getY());
     }
 
     public static void fillOval(GraphicsContext context, Coordinate pos, double width, double height) {
