@@ -4,8 +4,10 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0"
-            prefWidth="700.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity"
+            prefHeight="470.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/16"
+            fx:controller="me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Container">
   <top>
     <MenuBar prefHeight="20.0" prefWidth="628.0" BorderPane.alignment="CENTER">
       <Menu mnemonicParsing="false" text="File">
@@ -25,15 +27,15 @@
       <AnchorPane prefHeight="200.0" prefWidth="200.0"/>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0"/>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-        <ProgressBar layoutX="9.0" layoutY="36.0" prefHeight="18.0" prefWidth="230.0" progress="0.0"/>
+        <ProgressBar fx:id="armorBar" layoutX="9.0" layoutY="36.0" prefHeight="18.0" prefWidth="230.0" progress="0.0"/>
         <Label layoutX="14.0" layoutY="14.0" text="Armor"/>
         <Label layoutX="14.0" layoutY="63.0" text="Health"/>
-        <ProgressBar layoutX="9.0" layoutY="85.0" prefHeight="18.0" prefWidth="230.0" progress="0.0"/>
+        <ProgressBar fx:id="healthBar" layoutX="9.0" layoutY="85.0" prefHeight="18.0" prefWidth="230.0" progress="0.0"/>
       </AnchorPane>
     </SplitPane>
   </right>
   <center>
-    <Canvas height="450.0" width="450.0" BorderPane.alignment="TOP_LEFT">
+    <Canvas fx:id="canvas" height="450.0" width="450.0" BorderPane.alignment="TOP_LEFT">
       <BorderPane.margin>
         <Insets/>
       </BorderPane.margin>

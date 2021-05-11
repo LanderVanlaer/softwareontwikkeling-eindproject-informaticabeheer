@@ -11,6 +11,7 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons
 import java.util.EnumMap;
 
 abstract public class Entity extends Mover {
+    public static double MOVEMENT_SPEED = 7;
     private final int maxHp;
     private final EnumMap<AnchorPoint, Item> anchorPoints;
     private int hp;
@@ -68,8 +69,19 @@ abstract public class Entity extends Mover {
             this.setHp(getHp() + hp);
     }
 
+    @Override
+    public double getMass() {
+        double mass = super.getMass();
+        mass += getAnchorPoints().values().stream().mapToDouble(Item::getMass).sum();
+        return mass;
+    }
+
     public boolean isDead() {
         return getHp() <= 0;
+    }
+
+    public double getHpPercentage() {
+        return (double) getHp() / (double) getMaxHp();
     }
 
     public abstract void useAttack();

@@ -1,9 +1,11 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.objects.Drawable;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Entity;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
 public abstract class Item implements Drawable {
     /**
@@ -29,7 +31,14 @@ public abstract class Item implements Drawable {
 
     @Override
     public void draw(GraphicsContext gc) {
-        // TODO: 21/04/2021 draw item
+        Draw.setFill(Color.LIGHTGRAY);
+        Draw.setLineWidth(4);
+        Draw.setStroke(Color.BLACK);
+        Draw.fillCircle(gc, getPos(), 10);
+    }
+
+    public boolean canBeDrawn() {
+        return getHolder() == null && getPos() != null;
     }
 
     public Coordinate getPos() {

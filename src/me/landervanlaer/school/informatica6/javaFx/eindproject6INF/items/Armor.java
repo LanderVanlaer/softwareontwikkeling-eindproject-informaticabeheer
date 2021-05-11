@@ -36,4 +36,8 @@ public class Armor extends Item {
 
         return Number.constrain(pro, 0, Integer.MAX_VALUE);
     }
+
+    public double getProtectionPercentage() {
+        return (double) getProtection() / (double) Armor.PROTECTION_MAX;
+    }
 }
