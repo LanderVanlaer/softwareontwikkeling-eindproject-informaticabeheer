@@ -30,9 +30,9 @@ public class Viewbox {
 
     public boolean containsCoordinate(Coordinate coordinate) {
         final double left = getPos().getX() - DEVIATION;
-        final double right = getPos().getX() + DEVIATION;
+        final double right = getPos().getX() + getWidth() + DEVIATION;
         final double top = getPos().getY() - DEVIATION;
-        final double bottom = getPos().getY() + DEVIATION;
+        final double bottom = getPos().getY() + getHeight() + DEVIATION;
 
         return left < coordinate.getX() && coordinate.getX() < right
                 && top < coordinate.getY() && coordinate.getY() < bottom;
