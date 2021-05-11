@@ -1,7 +1,6 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items;
 
 import com.sun.jdi.InternalException;
-import me.landervanlaer.math.Number;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.Weapon;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.assaultRifles.Ak47;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.assaultRifles.AssaultRifle;
@@ -12,6 +11,8 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.submachineGuns.P90;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.submachineGuns.SubmachineGun;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.submachineGuns.Uzi;
+
+import static me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Factory.getRandomValueOf;
 
 public class WeaponFactory {
     public static Weapon generateRandom() {
@@ -33,10 +34,6 @@ public class WeaponFactory {
 
     public static WeaponType getRandomEnumValue() {
         return getRandomValueOf(WeaponType.values());
-    }
-
-    static <T> T getRandomValueOf(T[] values) {
-        return values[Number.getRandom(0, values.length)];
     }
 
     public static class PistolFactory {
