@@ -38,6 +38,7 @@ public class Player extends Entity {
     @Override
     public void update() {
         super.update();
+        applyForce(Game.getFriction(this));
 
         final EnumMap<KeyCode, Boolean> keys = Container.getInstance().getKeys();
 
@@ -52,7 +53,7 @@ public class Player extends Entity {
         });
         if(!vector.isZero())
             vector.setMag(Entity.MOVEMENT_SPEED);
-        getPos().add(vector);
+        applyForce(vector);
 
         final Viewbox viewbox = Game.getInstance().getViewBox();
         viewbox.setPos(new Coordinate(getPos().getX() - viewbox.getWidth() / 2D, getPos().getY() - viewbox.getHeight() / 2D));

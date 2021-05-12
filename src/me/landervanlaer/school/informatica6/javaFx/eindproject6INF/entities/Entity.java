@@ -11,7 +11,7 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons
 import java.util.EnumMap;
 
 abstract public class Entity extends Mover {
-    public static double MOVEMENT_SPEED = 7;
+    public static double MOVEMENT_SPEED = 10;
     private final int maxHp;
     private final EnumMap<AnchorPoint, Item> anchorPoints;
     private int hp;

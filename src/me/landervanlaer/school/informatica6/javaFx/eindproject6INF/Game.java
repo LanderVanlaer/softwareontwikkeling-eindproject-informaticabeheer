@@ -2,8 +2,10 @@ package me.landervanlaer.school.informatica6.javaFx.eindproject6INF;
 
 import javafx.scene.canvas.GraphicsContext;
 import me.landervanlaer.math.Coordinate;
+import me.landervanlaer.math.Vector;
 import me.landervanlaer.objects.Drawable;
 import me.landervanlaer.objects.Updatable;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Entity;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Player;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
@@ -19,6 +21,7 @@ public class Game implements Drawable, Updatable {
     public static final int PLAYFIELD_WIDTH = 1000;
     public static final int VIEWBOX_HEIGHT = 450;
     public static final int VIEWBOX_WIDTH = 450;
+    public static final double MU = .9;
 
     private final static Game game = new Game();
 
@@ -37,6 +40,13 @@ public class Game implements Drawable, Updatable {
 
     public static Game getInstance() {
         return game;
+    }
+
+    public static Vector getFriction(Entity entity) {
+        final Vector vector = entity.getVel().clone();
+        vector.invert();
+        vector.mult(Game.MU);
+        return vector;
     }
 
     @Override
