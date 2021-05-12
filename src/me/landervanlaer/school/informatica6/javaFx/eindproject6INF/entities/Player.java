@@ -2,6 +2,7 @@ package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.math.Vector;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.AnchorPoint;
@@ -10,6 +11,7 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Viewbox;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Armor;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Container;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
 import java.util.EnumMap;
 
@@ -20,7 +22,11 @@ public class Player extends Entity {
 
     @Override
     public void draw(GraphicsContext gc) {
-        // TODO: 27/04/2021  
+        Draw.setLineWidth(2);
+        Draw.setStroke(Color.BLACK);
+        Draw.setFill(Color.DARKGRAY);
+//        Draw.fillCircle(gc, getPos(), getMass() / 5);
+        Draw.fillTriangle(gc, getPos(), getVel().getAngle(), getMass() / 2D);
     }
 
     @Override

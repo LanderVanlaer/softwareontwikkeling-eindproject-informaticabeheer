@@ -58,6 +58,7 @@ public class Game implements Drawable, Updatable {
                 item.draw(gc);
             }
         });
+        getPlayer().draw(gc);
         // TODO: 27/04/2021
     }
 

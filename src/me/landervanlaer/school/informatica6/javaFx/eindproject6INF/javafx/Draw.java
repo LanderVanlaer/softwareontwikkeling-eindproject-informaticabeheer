@@ -2,6 +2,7 @@ package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import me.landervanlaer.math.Angle;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
 
@@ -33,7 +34,26 @@ public abstract class Draw {
     public static void fillOval(GraphicsContext context, Coordinate pos, double width, double height) {
         applySettings(context);
         final Coordinate coordinate = relativeCoordinate(pos);
+        coordinate.setX(coordinate.getX() - width / 2D);
+        coordinate.setY(coordinate.getY() - height / 2D);
         context.fillOval(coordinate.getX(), coordinate.getY(), width, height);
+    }
+
+    public static void fillTriangle(GraphicsContext context, Coordinate pos, Angle angle, double r) {
+        applySettings(context);
+        final Coordinate c = relativeCoordinate(pos);
+
+        final Angle left = new Angle(angle.getRadians());
+        left.setDegrees(left.getDegrees(true) + 120);
+
+        final Angle right = new Angle(angle.getRadians());
+        right.setDegrees(right.getDegrees(true) - 120);
+
+
+        Coordinate p1 = new Coordinate(c.getX() + Math.cos(angle.getRadians()) * r, c.getY() + Math.sin(angle.getRadians()) * r);
+        Coordinate p2 = new Coordinate(c.getX() + Math.cos(right.getRadians()) * r / 2, c.getY() + Math.sin(right.getRadians()) * r / 2);
+        Coordinate p3 = new Coordinate(c.getX() + Math.cos(left.getRadians()) * r / 2, c.getY() + Math.sin(left.getRadians()) * r / 2);
+        context.fillPolygon(new double[]{p1.getX(), p2.getX(), p3.getX()}, new double[]{p1.getY(), p2.getY(), p3.getY()}, 3);
     }
 
     public static void line(GraphicsContext context, Coordinate pos1, Coordinate pos2) {
