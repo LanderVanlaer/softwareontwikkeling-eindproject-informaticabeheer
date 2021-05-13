@@ -14,12 +14,13 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Armor;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.assaultRifles.Ak47;
 
 import java.net.URL;
-import java.util.EnumMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class Container implements Initializable, Updatable {
     private static Container container;
-    private final EnumMap<KeyCode, Boolean> keys = new EnumMap<>(KeyCode.class);
+    private final List<KeyCode> keys = new LinkedList<>();
     private final GameLoop gameLoop = new GameLoop();
     @FXML
     private Canvas canvas;
@@ -61,7 +62,7 @@ public class Container implements Initializable, Updatable {
         Game.getInstance().draw(canvas.getGraphicsContext2D());
     }
 
-    public EnumMap<KeyCode, Boolean> getKeys() {
+    public List<KeyCode> getKeys() {
         return keys;
     }
 

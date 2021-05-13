@@ -13,7 +13,7 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Container;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
-import java.util.EnumMap;
+import java.util.List;
 
 public class Player extends Entity {
     public Player(int maxHp, Coordinate pos, double mass) {
@@ -46,17 +46,17 @@ public class Player extends Entity {
         super.update();
         applyForce(Game.getFriction(this));
 
-        final EnumMap<KeyCode, Boolean> keys = Container.getInstance().getKeys();
+        final List<KeyCode> keys = Container.getInstance().getKeys();
 
         Vector vector = new Vector();
-        keys.forEach((keyCode, aBoolean) -> {
-            switch(keyCode) {
+        for(KeyCode key : keys) {
+            switch(key) {
                 case LEFT -> vector.add(new Vector(-MOVEMENT_SPEED, 0));
                 case RIGHT -> vector.add(new Vector(MOVEMENT_SPEED, 0));
                 case UP -> vector.add(new Vector(0, -MOVEMENT_SPEED));
                 case DOWN -> vector.add(new Vector(0, MOVEMENT_SPEED));
             }
-        });
+        }
         if(!vector.isZero())
             vector.setMag(Entity.MOVEMENT_SPEED);
         applyForce(vector);
