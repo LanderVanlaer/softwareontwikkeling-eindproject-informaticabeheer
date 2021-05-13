@@ -3,6 +3,7 @@ package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.KeyCode;
 import me.landervanlaer.math.Coordinate;
@@ -22,8 +23,11 @@ public class Container implements Initializable, Updatable {
     private static Container container;
     private final List<KeyCode> keys = new LinkedList<>();
     private final GameLoop gameLoop = new GameLoop();
+    private final Coordinate cursor = new Coordinate(0, 0);
     @FXML
     private Canvas canvas;
+    @FXML
+    private MenuBar menuBar;
     @FXML
     private ProgressBar healthBar;
     @FXML
@@ -68,5 +72,13 @@ public class Container implements Initializable, Updatable {
 
     public GameLoop getGameLoop() {
         return gameLoop;
+    }
+
+    public Coordinate getCursor() {
+        return cursor;
+    }
+
+    public MenuBar getMenuBar() {
+        return menuBar;
     }
 }

@@ -57,9 +57,15 @@ public abstract class Draw {
     }
 
     public static void line(GraphicsContext context, Coordinate pos1, Coordinate pos2) {
+        line(context, pos1, pos2, false, false);
+    }
+
+
+    public static void line(GraphicsContext context, Coordinate pos1, Coordinate pos2, boolean pos1RelativeToCanvas, boolean pos2RelativeToCanvas) {
+        final Coordinate c1 = pos1RelativeToCanvas ? pos1 : relativeCoordinate(pos1);
+        final Coordinate c2 = pos2RelativeToCanvas ? pos2 : relativeCoordinate(pos2);
+
         applySettings(context);
-        final Coordinate c1 = relativeCoordinate(pos1);
-        final Coordinate c2 = relativeCoordinate(pos2);
         context.beginPath();
         context.moveTo(c1.getX(), c1.getY());
         context.lineTo(c2.getX(), c2.getY());

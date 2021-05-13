@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import me.landervanlaer.math.Coordinate;
 
 public class Main extends Application {
     @Override
@@ -23,7 +24,11 @@ public class Main extends Application {
 //            controller.getKeys().put(event.getCode(), false);
             controller.getKeys().remove(event.getCode());
         });
-
+        scene.setOnMouseMoved(event -> {
+            final Coordinate cursor = Container.getInstance().getCursor();
+            cursor.setX(event.getSceneX());
+            cursor.setY(event.getSceneY() - Container.getInstance().getMenuBar().getHeight());
+        });
         primaryStage.setTitle("Eindproject 6INF");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);

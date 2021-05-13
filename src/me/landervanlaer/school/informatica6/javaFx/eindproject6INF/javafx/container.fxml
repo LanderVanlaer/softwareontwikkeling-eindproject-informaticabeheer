@@ -9,7 +9,7 @@
             prefHeight="470.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/16"
             fx:controller="me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Container">
   <top>
-    <MenuBar prefHeight="20.0" prefWidth="628.0" BorderPane.alignment="CENTER">
+    <MenuBar prefHeight="20.0" prefWidth="628.0" BorderPane.alignment="CENTER" fx:id="menuBar">
       <Menu mnemonicParsing="false" text="File">
         <MenuItem mnemonicParsing="false" text="Close"/>
       </Menu>

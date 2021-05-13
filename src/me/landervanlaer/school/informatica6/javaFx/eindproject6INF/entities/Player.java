@@ -28,6 +28,16 @@ public class Player extends Entity {
         Draw.setFill(Color.DARKGRAY);
 //        Draw.fillCircle(gc, getPos(), getMass() / 5);
         Draw.fillTriangle(gc, getPos(), getAngle(), getMass() / 2D);
+
+
+        Draw.setLineWidth(8);
+        final Vector v = new Vector(Draw.relativeCoordinate(getPos()), Container.getInstance().getCursor());
+        v.setMag(25);
+
+        final Coordinate to = new Coordinate(getPos());
+        to.add(v);
+
+        Draw.line(gc, getPos(), to, false, false);
     }
 
     public Armor getArmor() {
