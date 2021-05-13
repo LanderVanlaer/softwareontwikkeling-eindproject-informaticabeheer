@@ -55,8 +55,8 @@ public class Player extends Entity {
                     vector.add(new Vector(0, MOVEMENT_SPEED));
                     vector.setAngle(new Angle(getAngle().getRadians() + Math.PI));
                 }
-                case LEFT -> getAngle().setDegrees(getAngle().getDegrees() - 3);
-                case RIGHT -> getAngle().setDegrees(getAngle().getDegrees() + 3);
+                case LEFT -> getAngle().setDegrees(getAngle().getDegrees() - Entity.ROTATION_SPEED);
+                case RIGHT -> getAngle().setDegrees(getAngle().getDegrees() + Entity.ROTATION_SPEED);
             }
         }
         if(!vector.isZero())

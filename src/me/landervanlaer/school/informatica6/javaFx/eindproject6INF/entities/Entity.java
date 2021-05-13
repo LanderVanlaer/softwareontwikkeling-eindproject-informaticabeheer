@@ -13,6 +13,7 @@ import java.util.EnumMap;
 
 abstract public class Entity extends Mover {
     public static double MOVEMENT_SPEED = 5;
+    public static double ROTATION_SPEED = 2;
     public static double MOVEMENT_SPEED_MAX = 9;
     private final int maxHp;
     private final EnumMap<AnchorPoint, Item> anchorPoints;
