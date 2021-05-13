@@ -15,7 +15,9 @@ public class Main extends Application {
         Container controller = loader.getController();
 
         scene.setOnKeyPressed(event -> {
-            controller.getKeys().add(event.getCode());
+            if(!controller.getKeys().contains(event.getCode())) {
+                controller.getKeys().add(event.getCode());
+            }
         });
         scene.setOnKeyReleased(event -> {
 //            controller.getKeys().put(event.getCode(), false);
