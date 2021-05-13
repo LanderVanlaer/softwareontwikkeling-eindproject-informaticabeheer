@@ -43,6 +43,8 @@ public class Container implements Initializable, Updatable {
         gameLoop.setStartNanoTime(System.nanoTime());
         gameLoop.start();
 
+        Game.getInstance().initialize();
+
         //TEST
         final Coordinate coordinate = new Coordinate(Game.getInstance().getViewBox().getPos());
         Ak47 ak47 = new Ak47();

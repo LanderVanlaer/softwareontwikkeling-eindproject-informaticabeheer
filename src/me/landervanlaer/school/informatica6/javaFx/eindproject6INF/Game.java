@@ -49,6 +49,10 @@ public class Game implements Drawable, Updatable {
         return vector;
     }
 
+    public void initialize() {
+        this.playField.generateLoot();
+    }
+
     @Override
     public void draw(GraphicsContext gc) {
         Draw.clear(gc);
