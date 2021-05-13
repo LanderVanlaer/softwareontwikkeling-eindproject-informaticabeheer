@@ -6,10 +6,10 @@
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
             minWidth="-Infinity"
-            prefHeight="470.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/16"
+            prefHeight="810.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/11.0.1"
             fx:controller="me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Container">
   <top>
-    <MenuBar prefHeight="20.0" prefWidth="628.0" BorderPane.alignment="CENTER" fx:id="menuBar">
+    <MenuBar fx:id="menuBar" prefHeight="20.0" prefWidth="628.0" BorderPane.alignment="CENTER">
       <Menu mnemonicParsing="false" text="File">
         <MenuItem mnemonicParsing="false" text="Close"/>
       </Menu>
@@ -35,7 +35,7 @@
     </SplitPane>
   </right>
   <center>
-    <Canvas fx:id="canvas" height="450.0" width="450.0" BorderPane.alignment="TOP_LEFT">
+    <Canvas fx:id="canvas" height="785.0" width="1190.0" BorderPane.alignment="TOP_LEFT">
       <BorderPane.margin>
         <Insets/>
       </BorderPane.margin>
