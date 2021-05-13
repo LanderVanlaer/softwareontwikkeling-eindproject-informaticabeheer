@@ -38,8 +38,8 @@ public class Playfield implements Drawable {
 
     @Override
     public void draw(GraphicsContext gc) {
-        Draw.setStroke(new Color(0, 0, 0, .1));
-        Draw.setLineWidth(1);
+        gc.setStroke(new Color(0, 0, 0, .1));
+        gc.setLineWidth(1);
 
         final Viewbox viewbox = Game.getInstance().getViewBox();
         for(int i = 0; i <= getWidth(); i += 40) {

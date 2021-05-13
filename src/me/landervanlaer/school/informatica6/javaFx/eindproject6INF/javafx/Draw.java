@@ -1,25 +1,14 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import me.landervanlaer.math.Angle;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
 
 public abstract class Draw {
-    private static Color fill = Color.GRAY;
-    private static Color stroke = Color.BLACK;
-    private static double lineWidth = 1;
-
     public static void clear(GraphicsContext context) {
         context.clearRect(0, 0, context.getCanvas().getWidth(), context.getCanvas().getHeight());
         context.clearRect(0, 0, 400, 400);
-    }
-
-    public static void applySettings(GraphicsContext context) {
-        context.setFill(getFill());
-        context.setStroke(getStroke());
-        context.setLineWidth(getLineWidth());
     }
 
     public static void fillCircle(GraphicsContext context, Coordinate pos, double width) {
@@ -32,7 +21,6 @@ public abstract class Draw {
     }
 
     public static void fillOval(GraphicsContext context, Coordinate pos, double width, double height) {
-        applySettings(context);
         final Coordinate coordinate = relativeCoordinate(pos);
         coordinate.setX(coordinate.getX() - width / 2D);
         coordinate.setY(coordinate.getY() - height / 2D);
@@ -40,7 +28,6 @@ public abstract class Draw {
     }
 
     public static void fillTriangle(GraphicsContext context, Coordinate pos, Angle angle, double r) {
-        applySettings(context);
         final Coordinate c = relativeCoordinate(pos);
 
         final Angle left = new Angle(angle.getRadians());
@@ -65,38 +52,10 @@ public abstract class Draw {
         final Coordinate c1 = pos1RelativeToCanvas ? pos1 : relativeCoordinate(pos1);
         final Coordinate c2 = pos2RelativeToCanvas ? pos2 : relativeCoordinate(pos2);
 
-        applySettings(context);
         context.beginPath();
         context.moveTo(c1.getX(), c1.getY());
         context.lineTo(c2.getX(), c2.getY());
         context.stroke();
         context.closePath();
-    }
-
-    public static Color getFill() {
-        return fill;
-    }
-
-    public static void setFill(Color fill) {
-        if(fill != null)
-            Draw.fill = fill;
-    }
-
-    public static Color getStroke() {
-        return stroke;
-    }
-
-    public static void setStroke(Color stroke) {
-        if(stroke != null)
-            Draw.stroke = stroke;
-    }
-
-    public static double getLineWidth() {
-        return lineWidth;
-    }
-
-    public static void setLineWidth(double lineWidth) {
-        if(lineWidth > 0)
-            Draw.lineWidth = lineWidth;
     }
 }

@@ -23,14 +23,14 @@ public class Player extends Entity {
 
     @Override
     public void draw(GraphicsContext gc) {
-        Draw.setLineWidth(2);
-        Draw.setStroke(Color.BLACK);
-        Draw.setFill(Color.DARKGRAY);
+        gc.setLineWidth(2);
+        gc.setStroke(Color.BLACK);
+        gc.setFill(Color.DARKGRAY);
 //        Draw.fillCircle(gc, getPos(), getMass() / 5);
         Draw.fillTriangle(gc, getPos(), getAngle(), getMass() / 2D);
 
 
-        Draw.setLineWidth(8);
+        gc.setLineWidth(8);
         final Vector v = new Vector(Draw.relativeCoordinate(getPos()), Container.getInstance().getCursor());
         v.setMag(25);
 
@@ -38,6 +38,12 @@ public class Player extends Entity {
         to.add(v);
 
         Draw.line(gc, getPos(), to, false, false);
+
+        gc.setLineWidth(2);
+        gc.setStroke(new Color(0, 0, 0, 0.2));
+        gc.setLineDashes(10);
+        Draw.line(gc, getPos(), Container.getInstance().getCursor(), false, true);
+        gc.setLineDashes(0);
     }
 
     public Armor getArmor() {

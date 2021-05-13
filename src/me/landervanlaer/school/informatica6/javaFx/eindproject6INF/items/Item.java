@@ -31,9 +31,9 @@ public abstract class Item implements Drawable {
 
     @Override
     public void draw(GraphicsContext gc) {
-        Draw.setFill(Color.LIGHTGRAY);
-        Draw.setLineWidth(4);
-        Draw.setStroke(Color.BLACK);
+        gc.setFill(Color.LIGHTGRAY);
+        gc.setLineWidth(4);
+        gc.setStroke(Color.BLACK);
         Draw.fillCircle(gc, getPos(), 10);
     }
 
