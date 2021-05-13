@@ -3,6 +3,7 @@ package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+import me.landervanlaer.math.Angle;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.math.Vector;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.AnchorPoint;
@@ -26,12 +27,7 @@ public class Player extends Entity {
         Draw.setStroke(Color.BLACK);
         Draw.setFill(Color.DARKGRAY);
 //        Draw.fillCircle(gc, getPos(), getMass() / 5);
-        Draw.fillTriangle(gc, getPos(), getVel().getAngle(), getMass() / 2D);
-    }
-
-    @Override
-    public void useAttack() {
-        // TODO: 27/04/2021
+        Draw.fillTriangle(gc, getPos(), getAngle(), getMass() / 2D);
     }
 
     public Armor getArmor() {
@@ -51,10 +47,16 @@ public class Player extends Entity {
         Vector vector = new Vector();
         for(KeyCode key : keys) {
             switch(key) {
-                case LEFT -> vector.add(new Vector(-MOVEMENT_SPEED, 0));
-                case RIGHT -> vector.add(new Vector(MOVEMENT_SPEED, 0));
-                case UP -> vector.add(new Vector(0, -MOVEMENT_SPEED));
-                case DOWN -> vector.add(new Vector(0, MOVEMENT_SPEED));
+                case UP -> {
+                    vector.add(new Vector(0, MOVEMENT_SPEED));
+                    vector.setAngle(getAngle());
+                }
+                case DOWN -> {
+                    vector.add(new Vector(0, MOVEMENT_SPEED));
+                    vector.setAngle(new Angle(getAngle().getRadians() + Math.PI));
+                }
+                case LEFT -> getAngle().setDegrees(getAngle().getDegrees() - 3);
+                case RIGHT -> getAngle().setDegrees(getAngle().getDegrees() + 3);
             }
         }
         if(!vector.isZero())
@@ -63,5 +65,10 @@ public class Player extends Entity {
 
         final Viewbox viewbox = Game.getInstance().getViewBox();
         viewbox.setPos(new Coordinate(getPos().getX() - viewbox.getWidth() / 2D, getPos().getY() - viewbox.getHeight() / 2D));
+    }
+
+    @Override
+    public void useAttack() {
+        // TODO: 27/04/2021
     }
 }

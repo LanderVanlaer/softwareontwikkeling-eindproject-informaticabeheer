@@ -17,8 +17,8 @@ import java.util.List;
 public class Game implements Drawable, Updatable {
     public static final int PLAYER_MAX_HP = 100;
     public static final int PLAYER_MASS = 70;
-    public static final int PLAYFIELD_HEIGHT = 1000;
-    public static final int PLAYFIELD_WIDTH = 1000;
+    public static final int PLAYFIELD_HEIGHT = 5000;
+    public static final int PLAYFIELD_WIDTH = 5000;
     public static final int VIEWBOX_HEIGHT = 450;
     public static final int VIEWBOX_WIDTH = 450;
     public static final double MU = .9;

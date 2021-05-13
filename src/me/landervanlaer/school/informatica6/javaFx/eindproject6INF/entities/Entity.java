@@ -1,5 +1,6 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities;
 
+import me.landervanlaer.math.Angle;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.math.Mover;
 import me.landervanlaer.math.Number;
@@ -11,9 +12,11 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons
 import java.util.EnumMap;
 
 abstract public class Entity extends Mover {
-    public static double MOVEMENT_SPEED = 10;
+    public static double MOVEMENT_SPEED = 5;
+    public static double MOVEMENT_SPEED_MAX = 9;
     private final int maxHp;
     private final EnumMap<AnchorPoint, Item> anchorPoints;
+    private Angle angle;
     private int hp;
 
     public Entity(int maxHp, Coordinate pos, double mass) {
@@ -22,6 +25,21 @@ abstract public class Entity extends Mover {
         this.maxHp = maxHp;
         this.hp = this.maxHp;
         this.anchorPoints = new EnumMap<>(AnchorPoint.class);
+        this.angle = new Angle();
+    }
+
+    @Override
+    public void update() {
+        if(getAcc().getMag() > MOVEMENT_SPEED_MAX)
+            getAcc().setMag(MOVEMENT_SPEED);
+        super.update();
+    }
+
+    @Override
+    public double getMass() {
+        double mass = super.getMass();
+        mass += getAnchorPoints().values().stream().mapToDouble(Item::getMass).sum();
+        return mass;
     }
 
     public void hit(Bullet bullet) {
@@ -69,13 +87,6 @@ abstract public class Entity extends Mover {
             this.setHp(getHp() + hp);
     }
 
-    @Override
-    public double getMass() {
-        double mass = super.getMass();
-        mass += getAnchorPoints().values().stream().mapToDouble(Item::getMass).sum();
-        return mass;
-    }
-
     public boolean isDead() {
         return getHp() <= 0;
     }
@@ -85,4 +96,12 @@ abstract public class Entity extends Mover {
     }
 
     public abstract void useAttack();
+
+    public Angle getAngle() {
+        return angle;
+    }
+
+    public void setAngle(Angle angle) {
+        this.angle = angle;
+    }
 }
