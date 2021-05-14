@@ -6,6 +6,7 @@ import me.landervanlaer.math.Mover;
 import me.landervanlaer.math.Number;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.AnchorPoint;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Armor;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Backpack;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.Bullet;
 
@@ -26,6 +27,9 @@ abstract public class Entity extends Mover {
         this.maxHp = maxHp;
         this.hp = this.maxHp;
         this.anchorPoints = new EnumMap<>(AnchorPoint.class);
+        final Backpack backpack = new Backpack(10, 2);
+        backpack.setHolder(this);
+        this.anchorPoints.put(AnchorPoint.BACK, backpack);
         this.angle = new Angle();
     }
 
@@ -60,6 +64,15 @@ abstract public class Entity extends Mover {
         }
 
         reduceHp(damage);
+    }
+
+    public void addItemToBackpack(Item item) throws NoBackpack {
+        final Item backpack = getAnchorPoints().get(AnchorPoint.BACK);
+
+        if(!(backpack instanceof Backpack))
+            throw new NoBackpack();
+
+        ((Backpack) backpack).addItem(item);
     }
 
     public void reduceHp(int hp) {
@@ -104,5 +117,8 @@ abstract public class Entity extends Mover {
 
     public void setAngle(Angle angle) {
         this.angle = angle;
+    }
+
+    public static class NoBackpack extends Exception {
     }
 }

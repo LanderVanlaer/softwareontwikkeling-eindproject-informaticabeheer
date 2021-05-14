@@ -15,6 +15,10 @@ public abstract class Draw {
         fillOval(context, pos, width, width);
     }
 
+    public static void strokeCircle(GraphicsContext context, Coordinate pos, double width) {
+        strokeOval(context, pos, width, width);
+    }
+
     public static Coordinate relativeCoordinate(Coordinate c) {
         final Coordinate pos = Game.getInstance().getViewBox().getPos();
         return new Coordinate(c.getX() - pos.getX(), c.getY() - pos.getY());
@@ -25,6 +29,13 @@ public abstract class Draw {
         coordinate.setX(coordinate.getX() - width / 2D);
         coordinate.setY(coordinate.getY() - height / 2D);
         context.fillOval(coordinate.getX(), coordinate.getY(), width, height);
+    }
+
+    public static void strokeOval(GraphicsContext context, Coordinate pos, double width, double height) {
+        final Coordinate coordinate = relativeCoordinate(pos);
+        coordinate.setX(coordinate.getX() - width / 2D);
+        coordinate.setY(coordinate.getY() - height / 2D);
+        context.strokeOval(coordinate.getX(), coordinate.getY(), width, height);
     }
 
     public static void fillTriangle(GraphicsContext context, Coordinate pos, Angle angle, double r) {

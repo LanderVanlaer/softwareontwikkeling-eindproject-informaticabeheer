@@ -10,19 +10,30 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.AnchorPoint;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Viewbox;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Armor;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Backpack;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.Weapon;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Container;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Player extends Entity {
+    private static final double MAX_SURROUNDING_RADIUS = 100;
+
     public Player(int maxHp, Coordinate pos, double mass) {
         super(maxHp, pos, mass);
     }
 
     @Override
     public void draw(GraphicsContext gc) {
+
+        gc.setLineWidth(1);
+        gc.setStroke(new Color(0, 0, 0, 0.1));
+        Draw.strokeCircle(gc, getPos(), MAX_SURROUNDING_RADIUS * 2);
+
         gc.setLineWidth(2);
         gc.setStroke(Color.BLACK);
         gc.setFill(Color.DARKGRAY);
@@ -46,6 +57,14 @@ public class Player extends Entity {
         gc.setLineDashes(0);
     }
 
+    public Item getHand() {
+        return getAnchorPoints().get(AnchorPoint.HAND);
+    }
+
+    public Item setHand(Weapon weapon) {
+        return getAnchorPoints().put(AnchorPoint.HAND, weapon);
+    }
+
     public Armor getArmor() {
         final Item item = getAnchorPoints().get(AnchorPoint.BODY);
         if(item instanceof Armor)
@@ -53,9 +72,13 @@ public class Player extends Entity {
         return null;
     }
 
+    public Item setArmor(Armor armor) {
+        armor.setHolder(this);
+        return getAnchorPoints().put(AnchorPoint.BODY, armor);
+    }
+
     @Override
     public void update() {
-        super.update();
         applyForce(Game.getFriction(this));
 
         final List<KeyCode> keys = Container.getInstance().getKeys();
@@ -63,16 +86,16 @@ public class Player extends Entity {
         Vector vector = new Vector();
         for(KeyCode key : keys) {
             switch(key) {
-                case UP -> {
+                case Z, W -> {
                     vector.add(new Vector(0, MOVEMENT_SPEED));
                     vector.setAngle(getAngle());
                 }
-                case DOWN -> {
+                case S -> {
                     vector.add(new Vector(0, MOVEMENT_SPEED));
                     vector.setAngle(new Angle(getAngle().getRadians() + Math.PI));
                 }
-                case LEFT -> getAngle().setDegrees(getAngle().getDegrees() - Entity.ROTATION_SPEED);
-                case RIGHT -> getAngle().setDegrees(getAngle().getDegrees() + Entity.ROTATION_SPEED);
+                case A, Q -> getAngle().setDegrees(getAngle().getDegrees() - Entity.ROTATION_SPEED);
+                case D -> getAngle().setDegrees(getAngle().getDegrees() + Entity.ROTATION_SPEED);
             }
         }
         if(!vector.isZero())
@@ -81,10 +104,48 @@ public class Player extends Entity {
 
         final Viewbox viewbox = Game.getInstance().getViewBox();
         viewbox.setPos(new Coordinate(getPos().getX() - viewbox.getWidth() / 2D, getPos().getY() - viewbox.getHeight() / 2D));
+
+        super.update();
     }
 
     @Override
     public void useAttack() {
         // TODO: 27/04/2021
+    }
+
+    public void changeBackpack(Backpack backpack) {
+        final Backpack prevBackpack = (Backpack) setBackPack(backpack);
+
+        for(int i = 0; i < prevBackpack.getItems().size(); i++) {
+            final Item item = prevBackpack.removeItem(i);
+
+            if(item != backpack) {
+                try {
+                    backpack.addItem(item);
+                } catch(Backpack.MaxMassExceeded ignored) {
+                    item.drop();
+                }
+            }
+        }
+
+        try {
+            backpack.addItem(prevBackpack);
+        } catch(Backpack.MaxMassExceeded ignored) {
+            prevBackpack.drop();
+        }
+    }
+
+    public Item setBackPack(Backpack backpack) {
+        backpack.setHolder(this);
+        return getAnchorPoints().put(AnchorPoint.BACK, backpack);
+    }
+
+    public Backpack getBackpack() {
+        final Item item = getAnchorPoints().get(AnchorPoint.BACK);
+        return item instanceof Backpack ? (Backpack) item : null;
+    }
+
+    public List<Item> getAllSurroundingItems() {
+        return Game.getInstance().getItems().stream().filter(item -> item.getPos() != null && item.getPos().getDistanceBetween(getPos()) < MAX_SURROUNDING_RADIUS).collect(Collectors.toCollection(LinkedList::new));
     }
 }

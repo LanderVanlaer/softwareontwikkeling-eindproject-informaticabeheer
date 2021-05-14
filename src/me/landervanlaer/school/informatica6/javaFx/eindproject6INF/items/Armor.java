@@ -51,4 +51,9 @@ public class Armor extends Item {
     public double getProtectionPercentage() {
         return (double) getProtection() / (double) Armor.PROTECTION_MAX;
     }
+
+    @Override
+    public String getExtra() {
+        return String.valueOf(getProtection());
+    }
 }

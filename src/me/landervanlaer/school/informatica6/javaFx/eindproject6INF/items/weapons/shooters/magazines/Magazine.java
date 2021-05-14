@@ -7,6 +7,8 @@ import me.landervanlaer.math.Number;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
+import java.text.MessageFormat;
+
 public abstract class Magazine extends Item {
     private int amount;
 
@@ -27,12 +29,21 @@ public abstract class Magazine extends Item {
         this.amount = Number.constrain(amount, 0, getMax());
     }
 
+    public double getPercentageLoaded() {
+        return (double) getAmount() / (double) getMax();
+    }
+
     @Override
     public void draw(GraphicsContext gc) {
         gc.setFill(Color.LIGHTGRAY);
         gc.setLineWidth(4);
         gc.setStroke(Color.BLACK);
         Draw.fillCircle(gc, getPos(), WIDTH);
+    }
+
+    @Override
+    public String getExtra() {
+        return MessageFormat.format("{0} / {1}", getAmount(), getMax());
     }
 
     public void fireBullet() {

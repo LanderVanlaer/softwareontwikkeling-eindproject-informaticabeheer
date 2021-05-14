@@ -2,7 +2,7 @@ package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapon
 
 public class MediumMagazine extends Magazine {
     public static int MAX = 12;
-    public static String NAME = "Medium";
+    public static String NAME = "Medium Magazine";
 
     @Override
     public int getMax() {

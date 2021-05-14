@@ -2,7 +2,7 @@ package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapon
 
 public class HeavyMagazine extends Magazine {
     public static int MAX = 50;
-    public static String NAME = "Heavy";
+    public static String NAME = "Heavy Magazine";
 
     @Override
     public int getMax() {
