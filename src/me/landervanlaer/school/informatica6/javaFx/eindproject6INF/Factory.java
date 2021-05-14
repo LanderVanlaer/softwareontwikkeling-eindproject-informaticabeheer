@@ -11,7 +11,7 @@ public abstract class Factory {
     }
 
     public static <T extends Factory.WeightHolder> T getRandomByWeightValueOf(T[] values) {
-        int total = Arrays.stream(values).mapToInt(Factory.WeightHolder::getWeight).sum();
+        int total = Number.getRandom(0, Arrays.stream(values).mapToInt(Factory.WeightHolder::getWeight).sum());
 
         for(T value : values) {
             total -= value.getWeight();

@@ -1,6 +1,9 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import me.landervanlaer.math.Number;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
 import java.text.MessageFormat;
 
@@ -17,6 +20,14 @@ public class Armor extends Item {
 
     public static boolean isValidProtection(int protection) {
         return protection >= PROTECTION_MIN && protection <= PROTECTION_MAX;
+    }
+
+    @Override
+    public void draw(GraphicsContext gc) {
+        gc.setFill(Color.BLUE);
+        gc.setLineWidth(4);
+        gc.setStroke(Color.BLACK);
+        Draw.fillCircle(gc, getPos(), WIDTH);
     }
 
     public int getProtection() {

@@ -1,13 +1,11 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items;
 
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.objects.Drawable;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Entity;
-import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
 public abstract class Item implements Drawable {
+    public static final double WIDTH = 10;
     /**
      * The mass of the element
      */
@@ -27,14 +25,6 @@ public abstract class Item implements Drawable {
 
     public Item(double mass) {
         this(mass, null);
-    }
-
-    @Override
-    public void draw(GraphicsContext gc) {
-        gc.setFill(Color.LIGHTGRAY);
-        gc.setLineWidth(4);
-        gc.setStroke(Color.BLACK);
-        Draw.fillCircle(gc, getPos(), 10);
     }
 
     public boolean canBeDrawn() {

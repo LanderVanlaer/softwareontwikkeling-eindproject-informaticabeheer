@@ -3,10 +3,10 @@ package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Factory;
 
 public enum ItemType implements Factory.WeightHolder {
-    ARMOR(10),
+    ARMOR(13),
     BACKPACK(10),
-    WEAPON(15),
-    MAGAZINE(20);
+    WEAPON(17),
+    MAGAZINE(35);
 
     public final int weight;
 

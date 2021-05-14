@@ -15,7 +15,7 @@ public class Playfield implements Drawable {
     /**
      * The lower the value, the higher the spawn frequency.
      */
-    public static final int SPAWN_FREQUENCY = 200;
+    public static final int SPAWN_FREQUENCY = 250;
     private final int width;
     private final int height;
 

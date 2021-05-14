@@ -1,5 +1,9 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +20,14 @@ public class Backpack extends Item {
         super(weight);
         this.items = new ArrayList<>();
         this.maxMass = maxMass <= 1 ? 1 : maxMass;
+    }
+
+    @Override
+    public void draw(GraphicsContext gc) {
+        gc.setFill(Color.PURPLE);
+        gc.setLineWidth(4);
+        gc.setStroke(Color.BLACK);
+        Draw.fillCircle(gc, getPos(), WIDTH);
     }
 
     @Override
