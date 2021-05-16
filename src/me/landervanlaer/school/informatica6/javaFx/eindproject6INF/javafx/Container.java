@@ -175,6 +175,22 @@ public class Container implements Initializable, Updatable {
 
             player.changeBackpack(backpack);
         });
+
+        final Item handItem = player.getHand();
+        if(handItem instanceof Weapon) {
+            handsChoice.getItems().add((Weapon) handItem);
+            handsChoice.getSelectionModel().select((Weapon) handItem);
+        }
+        final Armor bodyItem = player.getArmor();
+        if(bodyItem != null) {
+            bodyChoice.getItems().add(bodyItem);
+            bodyChoice.getSelectionModel().select(bodyItem);
+        }
+        final Backpack backItem = player.getBackpack();
+        if(backItem != null) {
+            backChoice.getItems().add(backItem);
+            backChoice.getSelectionModel().select(backItem);
+        }
     }
 
     private void showError(String message) {
@@ -200,36 +216,51 @@ public class Container implements Initializable, Updatable {
         updateListToOtherList(pickUpTable.getItems(), player.getAllSurroundingItems());
 
         final Backpack backpack = player.getBackpack();
-        if(backpack != null) {
-            updateListToOtherList(handsChoice.getItems(), backpack.getItems().stream().filter(item -> item instanceof Weapon).collect(Collectors.toList()));
-            updateListToOtherList(bodyChoice.getItems(), backpack.getItems().stream().filter(item -> item instanceof Armor).collect(Collectors.toList()));
-            updateListToOtherList(backChoice.getItems(), backpack.getItems().stream().filter(item -> item instanceof Backpack).collect(Collectors.toList()));
-
-            updateListToOtherList(backpackTable.getItems(), backpack.getItems());
-
-
-            backpackCurrentMass.setText(String.valueOf(backpack.getMassInBackpack()));
-            backpackMaxMass.setText(String.valueOf(backpack.getMaxMass()));
-
-            int amountOfLightMz = 0;
-            int amountOfMediumMz = 0;
-            int amountOfHeavyMz = 0;
-            for(Item item : backpack.getItems()) {
-                if(item instanceof LightMagazine)
-                    amountOfLightMz += ((LightMagazine) item).getAmount();
-                else if(item instanceof MediumMagazine)
-                    amountOfMediumMz += ((MediumMagazine) item).getAmount();
-                else if(item instanceof HeavyMagazine)
-                    amountOfHeavyMz += ((HeavyMagazine) item).getAmount();
-            }
-
-            magazineTotalLight.setText(String.valueOf(amountOfLightMz));
-            magazineTotalMedium.setText(String.valueOf(amountOfMediumMz));
-            magazineTotalHeavy.setText(String.valueOf(amountOfHeavyMz));
-        } else {
-            backpackCurrentMass.setText(null);
-            backpackMaxMass.setText(null);
+        final List<Item> handItems = backpack.getItems().stream().filter(item -> item instanceof Weapon).collect(Collectors.toList());
+        if(player.getHand() instanceof Weapon) {
+            handItems.add(player.getHand());
+            if(handsChoice.getSelectionModel().getSelectedItem() != player.getHand())
+                handsChoice.getSelectionModel().select((Weapon) player.getHand());
         }
+        updateListToOtherList(handsChoice.getItems(), handItems);
+
+        final List<Item> bodyItems = backpack.getItems().stream().filter(item -> item instanceof Armor).collect(Collectors.toList());
+        if(player.getArmor() != null) {
+            bodyItems.add(player.getArmor());
+            if(bodyChoice.getSelectionModel().getSelectedItem() != player.getArmor()) {
+                bodyChoice.getSelectionModel().select(player.getArmor());
+            }
+        }
+        updateListToOtherList(bodyChoice.getItems(), bodyItems);
+
+        final List<Item> backItems = backpack.getItems().stream().filter(item -> item instanceof Backpack).collect(Collectors.toList());
+        backItems.add(backpack);
+        if(backChoice.getSelectionModel().getSelectedItem() != backpack)
+            backChoice.getSelectionModel().select(backpack);
+        updateListToOtherList(backChoice.getItems(), backItems);
+
+
+        updateListToOtherList(backpackTable.getItems(), backpack.getItems());
+
+
+        backpackCurrentMass.setText(String.valueOf(backpack.getMassInBackpack()));
+        backpackMaxMass.setText(String.valueOf(backpack.getMaxMass()));
+
+        int amountOfLightMz = 0;
+        int amountOfMediumMz = 0;
+        int amountOfHeavyMz = 0;
+        for(Item item : backpack.getItems()) {
+            if(item instanceof LightMagazine)
+                amountOfLightMz += ((LightMagazine) item).getAmount();
+            else if(item instanceof MediumMagazine)
+                amountOfMediumMz += ((MediumMagazine) item).getAmount();
+            else if(item instanceof HeavyMagazine)
+                amountOfHeavyMz += ((HeavyMagazine) item).getAmount();
+        }
+
+        magazineTotalLight.setText(String.valueOf(amountOfLightMz));
+        magazineTotalMedium.setText(String.valueOf(amountOfMediumMz));
+        magazineTotalHeavy.setText(String.valueOf(amountOfHeavyMz));
 
 
         magazineBar.setProgress(0);
@@ -244,17 +275,7 @@ public class Container implements Initializable, Updatable {
                     magazineMax.setText(String.valueOf(((Shooter<?>) handItem).getMagazine().getMax()));
                 }
             }
-            if(!handsChoice.getItems().contains(handItem)) {
-                handsChoice.getItems().add((Weapon) handItem);
-            }
-            handsChoice.getSelectionModel().select((Weapon) handItem);
         }
-
-        final Armor bodyItem = player.getArmor();
-        if(!bodyChoice.getItems().contains(bodyItem)) bodyChoice.getItems().add(bodyItem);
-        bodyChoice.getSelectionModel().select(bodyItem);
-
-
     }
 
     public List<KeyCode> getKeys() {

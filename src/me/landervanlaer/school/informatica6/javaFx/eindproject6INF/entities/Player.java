@@ -114,17 +114,19 @@ public class Player extends Entity {
     }
 
     public void changeBackpack(Backpack backpack) {
+        if(getBackpack() == backpack) return;
+
         final Backpack prevBackpack = (Backpack) setBackPack(backpack);
 
-        for(int i = 0; i < prevBackpack.getItems().size(); i++) {
-            final Item item = prevBackpack.removeItem(i);
+        final int size = prevBackpack.getItems().size();
+        for(int i = 0; i < size; i++) {
+            final Item item = prevBackpack.removeItem(0);
+            if(item == backpack) continue;
 
-            if(item != backpack) {
-                try {
-                    backpack.addItem(item);
-                } catch(Backpack.MaxMassExceeded ignored) {
-                    item.drop();
-                }
+            try {
+                backpack.addItem(item);
+            } catch(Backpack.MaxMassExceeded ignored) {
+                item.drop();
             }
         }
 

@@ -21,7 +21,7 @@ public class Game implements Drawable, Updatable {
     public static final int PLAYFIELD_WIDTH = 5000;
     public static final int VIEWBOX_HEIGHT = 785;
     public static final int VIEWBOX_WIDTH = 1190;
-    public static final double MU = .9;
+    public static final double MU = .95;
 
     private final static Game game = new Game();
 

@@ -16,6 +16,8 @@ abstract public class Entity extends Mover {
     public static double MOVEMENT_SPEED = 5;
     public static double ROTATION_SPEED = 2;
     public static double MOVEMENT_SPEED_MAX = 9;
+    public static double DEFAULT_BACKPACK_MASS_MAX = 10;
+    public static double DEFAULT_BACKPACK_MASS = 2;
     private final int maxHp;
     private final EnumMap<AnchorPoint, Item> anchorPoints;
     private Angle angle;
@@ -27,7 +29,7 @@ abstract public class Entity extends Mover {
         this.maxHp = maxHp;
         this.hp = this.maxHp;
         this.anchorPoints = new EnumMap<>(AnchorPoint.class);
-        final Backpack backpack = new Backpack(10, 2);
+        final Backpack backpack = new Backpack(DEFAULT_BACKPACK_MASS_MAX, DEFAULT_BACKPACK_MASS);
         backpack.setHolder(this);
         this.anchorPoints.put(AnchorPoint.BACK, backpack);
         this.angle = new Angle();
@@ -35,8 +37,12 @@ abstract public class Entity extends Mover {
 
     @Override
     public void update() {
-        if(getAcc().getMag() > MOVEMENT_SPEED_MAX)
-            getAcc().setMag(MOVEMENT_SPEED);
+        //check if there is a Backpack
+        if(!(getAnchorPoints().get(AnchorPoint.BACK) instanceof Backpack)) {
+            final Backpack backpack = new Backpack(DEFAULT_BACKPACK_MASS_MAX, DEFAULT_BACKPACK_MASS);
+            getAnchorPoints().put(AnchorPoint.BACK, backpack);
+        }
+
         super.update();
     }
 

@@ -76,7 +76,7 @@ public class Backpack extends Item {
     }
 
     public boolean canAddItem(Item item) {
-        return getMassInBackpack() + item.getMass() < getMaxMass();
+        return getMassInBackpack() + item.getMass() <= getMaxMass();
     }
 
     public Item takeItem(int i) throws IndexOutOfBoundsException {
@@ -97,12 +97,14 @@ public class Backpack extends Item {
         return getItems().get(i);
     }
 
-    public void addItem(Item item) throws NullPointerException, MaxMassExceeded {
+    public void addItem(Item item) throws NullPointerException, IllegalArgumentException {
         if(item == null)
             throw new NullPointerException();
         if(!canAddItem(item))
             throw new MaxMassExceeded();
-        item.setPos(null);
+        if(item == this)
+            throw new IllegalArgumentException("Cannot put the backpack inside itself");
+
         item.setHolder(getHolder());
         getItems().add(item);
     }
