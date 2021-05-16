@@ -1,21 +1,23 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities;
 
-import me.landervanlaer.math.Angle;
-import me.landervanlaer.math.Coordinate;
-import me.landervanlaer.math.Mover;
 import me.landervanlaer.math.Number;
+import me.landervanlaer.math.*;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.AnchorPoint;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.GameLoop;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Armor;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Backpack;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.Bullet;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Container;
 
 import java.util.EnumMap;
 
 abstract public class Entity extends Mover {
-    public static double MOVEMENT_SPEED = 5;
+    /**
+     * amount of px / second
+     */
+    public static double MOVEMENT_SPEED = 400;
     public static double ROTATION_SPEED = 2;
-    public static double MOVEMENT_SPEED_MAX = 9;
     public static double DEFAULT_BACKPACK_MASS_MAX = 10;
     public static double DEFAULT_BACKPACK_MASS = 2;
     private final int maxHp;
@@ -44,6 +46,14 @@ abstract public class Entity extends Mover {
         }
 
         super.update();
+    }
+
+    @Override
+    public void applyForce(Vector force) {
+        final GameLoop gameLoop = Container.getInstance().getGameLoop();
+//        System.out.println(gameLoop.getFrameTime() + " / " + gameLoop.getFrameTimeMultiplier());
+        force.mult(gameLoop.getFrameTimeSeconds());
+        super.applyForce(force);
     }
 
     @Override

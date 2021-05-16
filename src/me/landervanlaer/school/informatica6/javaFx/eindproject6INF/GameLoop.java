@@ -4,34 +4,63 @@ import javafx.animation.AnimationTimer;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Container;
 
 public class GameLoop extends AnimationTimer {
-    public final double FRAME = 0.01D;
-    private double t = 0;
+    public static final int ONE_SECOND_NANO = 1_000_000_000;
+    private long prevNanoTime = 0;
+    private long nowNanoTime = 0;
     private long startNanoTime;
 
     @Override
     public void handle(long now) {
-        double t = ((now - startNanoTime) / 1000000000.0);
-        if(t - getT() > FRAME) {
-            setT(t);
-//            System.out.println(Math.abs(t - getT() - FRAME)); //deviation, for testing purposes
-            Container.getInstance().update();
-            Container.getInstance().draw();
-        }
+        //LIMIT TO 360 FPS
+        if(now - getNowNanoTime() < .00277777777778)
+            return;
+
+        setPrevNanoTime(getNowNanoTime());
+        setNowNanoTime(now);
+        Container.getInstance().update();
+        Container.getInstance().draw();
     }
 
-    public double getT() {
-        return t;
+    @Override
+    public void start() {
+        super.start();
+        setStartNanoTime(System.nanoTime());
+        setPrevNanoTime(System.nanoTime());
     }
 
-    public void setT(double t) {
-        this.t = t;
+    public int getFramesPerSecond() {
+        return (int) (1 / getFrameTimeSeconds());
+    }
+
+    public int getFrameTime() {
+        return (int) (getNowNanoTime() - getPrevNanoTime());
+    }
+
+    public double getFrameTimeSeconds() {
+        return (double) getFrameTime() / (double) ONE_SECOND_NANO;
+    }
+
+    public long getNowNanoTime() {
+        return nowNanoTime;
+    }
+
+    private void setNowNanoTime(long nowNanoTime) {
+        this.nowNanoTime = nowNanoTime;
+    }
+
+    public long getPrevNanoTime() {
+        return prevNanoTime;
+    }
+
+    private void setPrevNanoTime(long prevNanoTime) {
+        this.prevNanoTime = prevNanoTime;
     }
 
     public long getStartNanoTime() {
         return startNanoTime;
     }
 
-    public void setStartNanoTime(long startNanoTime) {
+    private void setStartNanoTime(long startNanoTime) {
         this.startNanoTime = startNanoTime;
     }
 }

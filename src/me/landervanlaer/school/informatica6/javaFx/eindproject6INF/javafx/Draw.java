@@ -58,6 +58,9 @@ public abstract class Draw {
         line(context, pos1, pos2, false, false);
     }
 
+    public static void text(GraphicsContext context, String text, Coordinate pos) {
+        context.fillText(text, pos.getX(), pos.getY());
+    }
 
     public static void line(GraphicsContext context, Coordinate pos1, Coordinate pos2, boolean pos1RelativeToCanvas, boolean pos2RelativeToCanvas) {
         final Coordinate c1 = pos1RelativeToCanvas ? pos1 : relativeCoordinate(pos1);

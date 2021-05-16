@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Font;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.objects.Updatable;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
@@ -30,6 +31,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class Container implements Initializable, Updatable {
+    public static final int FPS_UPDATE_TIME = GameLoop.ONE_SECOND_NANO / 4;
     private static Container container;
     private final List<KeyCode> keys = new LinkedList<>();
     private final GameLoop gameLoop = new GameLoop();
@@ -71,6 +73,8 @@ public class Container implements Initializable, Updatable {
     private ProgressBar healthBar;
     @FXML
     private ProgressBar armorBar;
+    private long prevFpsUpdateTime;
+    private int fps = 0;
 
     public static Container getInstance() {
         return container;
@@ -99,7 +103,6 @@ public class Container implements Initializable, Updatable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Container.container = this;
-        gameLoop.setStartNanoTime(System.nanoTime());
         gameLoop.start();
 
         Game.getInstance().initialize();
@@ -276,6 +279,30 @@ public class Container implements Initializable, Updatable {
                 }
             }
         }
+
+        // FPS-counter
+        if(getGameLoop().getNowNanoTime() - getPrevFpsUpdateTime() > FPS_UPDATE_TIME) {
+            setPrevFpsUpdateTime(getGameLoop().getNowNanoTime());
+            setFps(getGameLoop().getFramesPerSecond());
+        }
+        canvas.getGraphicsContext2D().setFont(new Font(15));
+        Draw.text(canvas.getGraphicsContext2D(), String.valueOf(getFps()), new Coordinate(10, 25));
+    }
+
+    public int getFps() {
+        return fps;
+    }
+
+    public void setFps(int fps) {
+        this.fps = fps;
+    }
+
+    public long getPrevFpsUpdateTime() {
+        return prevFpsUpdateTime;
+    }
+
+    public void setPrevFpsUpdateTime(long prevFpsUpdateTime) {
+        this.prevFpsUpdateTime = prevFpsUpdateTime;
     }
 
     public List<KeyCode> getKeys() {

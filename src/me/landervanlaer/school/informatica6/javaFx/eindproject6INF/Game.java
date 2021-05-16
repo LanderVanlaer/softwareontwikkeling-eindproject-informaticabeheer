@@ -8,6 +8,7 @@ import me.landervanlaer.objects.Updatable;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Entity;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Player;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Container;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
 import java.util.LinkedList;
@@ -45,6 +46,7 @@ public class Game implements Drawable, Updatable {
     public static Vector getFriction(Entity entity) {
         final Vector vector = entity.getVel().clone();
         vector.invert();
+        vector.div(Container.getInstance().getGameLoop().getFrameTimeSeconds());
         vector.mult(Game.MU);
         return vector;
     }
