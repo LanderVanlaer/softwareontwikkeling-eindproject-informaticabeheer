@@ -148,6 +148,12 @@ public class Player extends Entity {
     }
 
     public List<Item> getAllSurroundingItems() {
-        return Game.getInstance().getItems().stream().filter(item -> item.getPos() != null && item.getPos().getDistanceBetween(getPos()) < MAX_SURROUNDING_RADIUS).collect(Collectors.toCollection(LinkedList::new));
+        return Game.getInstance().getItems().stream().filter(item ->
+                item.getPos() != null
+                        && getPos().getX() - MAX_SURROUNDING_RADIUS < getPos().getX()
+                        && getPos().getX() + MAX_SURROUNDING_RADIUS > getPos().getX()
+                        && getPos().getY() - MAX_SURROUNDING_RADIUS < getPos().getY()
+                        && getPos().getY() + MAX_SURROUNDING_RADIUS > getPos().getY()
+                        && item.getPos().getDistanceBetween(getPos()) < MAX_SURROUNDING_RADIUS).collect(Collectors.toCollection(LinkedList::new));
     }
 }

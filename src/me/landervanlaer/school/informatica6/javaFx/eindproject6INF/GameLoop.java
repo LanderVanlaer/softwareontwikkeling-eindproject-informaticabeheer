@@ -12,7 +12,7 @@ public class GameLoop extends AnimationTimer {
     @Override
     public void handle(long now) {
         //LIMIT TO 360 FPS
-        if(now - getNowNanoTime() < .00277777777778)
+        if(now - getNowNanoTime() < 2_777_777.777777777777777777777)
             return;
 
         setPrevNanoTime(getNowNanoTime());

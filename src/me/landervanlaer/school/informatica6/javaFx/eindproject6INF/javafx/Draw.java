@@ -42,10 +42,10 @@ public abstract class Draw {
         final Coordinate c = relativeCoordinate(pos);
 
         final Angle left = new Angle(angle.getRadians());
-        left.setDegrees(left.getDegrees(true) + 120);
+        left.setDegrees(left.getDegrees(false) + 120);
 
         final Angle right = new Angle(angle.getRadians());
-        right.setDegrees(right.getDegrees(true) - 120);
+        right.setDegrees(right.getDegrees(false) - 120);
 
 
         Coordinate p1 = new Coordinate(c.getX() + Math.cos(angle.getRadians()) * r, c.getY() + Math.sin(angle.getRadians()) * r);
