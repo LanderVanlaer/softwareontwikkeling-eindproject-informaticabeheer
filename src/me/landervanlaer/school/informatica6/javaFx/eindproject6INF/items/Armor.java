@@ -53,6 +53,11 @@ public class Armor extends Item {
     }
 
     @Override
+    public String toString() {
+        return "%s (%d/%d)".formatted(super.toString(), getProtection(), PROTECTION_MAX);
+    }
+
+    @Override
     public String getExtra() {
         return String.valueOf(getProtection());
     }
