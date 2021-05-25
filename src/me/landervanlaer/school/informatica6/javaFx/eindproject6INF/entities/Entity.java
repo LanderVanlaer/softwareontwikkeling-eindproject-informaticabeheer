@@ -7,6 +7,7 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.GameLoop;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Armor;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Backpack;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.Weapon;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.Bullet;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Container;
 
@@ -94,6 +95,36 @@ abstract public class Entity extends Mover {
     public void reduceHp(int hp) {
         if(hp > 0)
             setHp(getHp() - hp);
+    }
+
+    public Item setBackPack(Backpack backpack) {
+        backpack.setHolder(this);
+        return getAnchorPoints().put(AnchorPoint.BACK, backpack);
+    }
+
+    public Backpack getBackpack() {
+        final Item item = getAnchorPoints().get(AnchorPoint.BACK);
+        return item instanceof Backpack ? (Backpack) item : null;
+    }
+
+    public Item getHand() {
+        return getAnchorPoints().get(AnchorPoint.HAND);
+    }
+
+    public Item setHand(Weapon weapon) {
+        return getAnchorPoints().put(AnchorPoint.HAND, weapon);
+    }
+
+    public Armor getArmor() {
+        final Item item = getAnchorPoints().get(AnchorPoint.BODY);
+        if(item instanceof Armor)
+            return (Armor) item;
+        return null;
+    }
+
+    public Item setArmor(Armor armor) {
+        armor.setHolder(this);
+        return getAnchorPoints().put(AnchorPoint.BODY, armor);
     }
 
     public int getMaxHp() {

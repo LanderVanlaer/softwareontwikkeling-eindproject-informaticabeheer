@@ -2,12 +2,14 @@ package me.landervanlaer.school.informatica6.javaFx.eindproject6INF;
 
 import javafx.scene.canvas.GraphicsContext;
 import me.landervanlaer.math.Coordinate;
+import me.landervanlaer.math.Mover;
 import me.landervanlaer.math.Vector;
 import me.landervanlaer.objects.Drawable;
 import me.landervanlaer.objects.Updatable;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Entity;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Player;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.Bullet;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Container;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
@@ -30,6 +32,7 @@ public class Game implements Drawable, Updatable {
     private final Viewbox viewBox;
     private Playfield playField;
     private Player player;
+    private List<Bullet> bullets;
 
     private Game() {
         this.items = new LinkedList<>();
@@ -37,6 +40,7 @@ public class Game implements Drawable, Updatable {
         final Coordinate middle = new Coordinate(getPlayField().getWidth() / 2D, getPlayField().getHeight() / 2D);
         this.player = new Player(PLAYER_MAX_HP, middle, PLAYER_MASS);
         this.viewBox = new Viewbox(VIEWBOX_WIDTH, VIEWBOX_HEIGHT, new Coordinate(middle.getX() - VIEWBOX_WIDTH / 2D, middle.getY() - VIEWBOX_HEIGHT / 2D));
+        this.bullets = new LinkedList<>();
     }
 
     public static Game getInstance() {
@@ -64,6 +68,11 @@ public class Game implements Drawable, Updatable {
                 item.draw(gc);
             }
         });
+        getBullets().forEach(bullet -> {
+            if(getViewBox().isVisible(bullet)) {
+                bullet.draw(gc);
+            }
+        });
         getPlayer().draw(gc);
         // TODO: 27/04/2021
     }
@@ -71,7 +80,9 @@ public class Game implements Drawable, Updatable {
     @Override
     public void update() {
         // TODO: 27/04/2021
+        getBullets().removeIf(bullet -> !bullet.isMoving());
         getPlayer().update();
+        getBullets().forEach(Mover::update);
     }
 
     public List<Item> getItems() {
@@ -96,5 +107,9 @@ public class Game implements Drawable, Updatable {
 
     public Viewbox getViewBox() {
         return viewBox;
+    }
+
+    public List<Bullet> getBullets() {
+        return bullets;
     }
 }

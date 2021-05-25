@@ -17,18 +17,19 @@ public class BulletGenerator {
     }
 
     public Bullet generate(Shooter<?> shooter, Coordinate headedTo) throws Magazine.EmptyMagazineException, FiringTooFast {
-        if(shooter.getMagazine().isEmpty())
+        if(shooter.getMagazine() == null || shooter.getMagazine().isEmpty())
             throw new Magazine.EmptyMagazineException();
 
         if(!canFire())
             throw new FiringTooFast();
 
 
-        Vector vel = new Vector(shooter.getPos(), headedTo);
+        Vector vel = new Vector(shooter.getHolder().getPos(), headedTo);
         vel.setMag(getVel());
 
         shooter.getMagazine().fireBullet();
-        return new Bullet(getDamage(), shooter.getPos(), vel);
+        updatePrevFire();
+        return new Bullet(getDamage(), new Coordinate(shooter.getHolder().getPos()), vel);
     }
 
     public int getDamage() {
@@ -36,7 +37,7 @@ public class BulletGenerator {
     }
 
     public boolean canFire() {
-        return getPrevFire() + getFireRate() >= System.currentTimeMillis();
+        return getPrevFire() + getFireRate() <= System.currentTimeMillis();
     }
 
     public void updatePrevFire() {

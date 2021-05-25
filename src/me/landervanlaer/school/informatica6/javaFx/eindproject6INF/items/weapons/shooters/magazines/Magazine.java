@@ -51,7 +51,7 @@ public abstract class Magazine extends Item {
     }
 
     public boolean isEmpty() {
-        return getAmount() <= amount;
+        return getAmount() <= 0;
     }
 
     public abstract int getMax();

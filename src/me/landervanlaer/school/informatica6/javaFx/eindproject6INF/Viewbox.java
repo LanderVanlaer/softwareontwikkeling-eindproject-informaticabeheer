@@ -38,6 +38,10 @@ public class Viewbox {
                 && top < coordinate.getY() && coordinate.getY() < bottom;
     }
 
+    public Coordinate relativeViewboxCoordinateToAbsolute(Coordinate c) {
+        return new Coordinate(getPos().getX() + c.getX(), getPos().getY() + c.getY());
+    }
+
     public int getWidth() {
         return width;
     }

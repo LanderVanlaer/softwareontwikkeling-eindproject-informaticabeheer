@@ -6,10 +6,8 @@ import javafx.scene.paint.Color;
 import me.landervanlaer.math.Angle;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.math.Vector;
-import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.AnchorPoint;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Viewbox;
-import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Armor;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Backpack;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.Weapon;
@@ -57,26 +55,6 @@ public class Player extends Entity {
         gc.setLineDashes(0);
     }
 
-    public Item getHand() {
-        return getAnchorPoints().get(AnchorPoint.HAND);
-    }
-
-    public Item setHand(Weapon weapon) {
-        return getAnchorPoints().put(AnchorPoint.HAND, weapon);
-    }
-
-    public Armor getArmor() {
-        final Item item = getAnchorPoints().get(AnchorPoint.BODY);
-        if(item instanceof Armor)
-            return (Armor) item;
-        return null;
-    }
-
-    public Item setArmor(Armor armor) {
-        armor.setHolder(this);
-        return getAnchorPoints().put(AnchorPoint.BODY, armor);
-    }
-
     @Override
     public void update() {
         applyForce(Game.getFriction(this));
@@ -96,6 +74,9 @@ public class Player extends Entity {
                 }
                 case A, Q -> getAngle().setDegrees(getAngle().getDegrees() - Entity.ROTATION_SPEED);
                 case D -> getAngle().setDegrees(getAngle().getDegrees() + Entity.ROTATION_SPEED);
+                case SPACE -> {
+                    useAttack();
+                }
             }
         }
         if(!vector.isZero())
@@ -110,7 +91,10 @@ public class Player extends Entity {
 
     @Override
     public void useAttack() {
-        // TODO: 27/04/2021
+        if(getHand() instanceof Weapon) {
+            final Weapon weapon = (Weapon) getHand();
+            weapon.attack(Game.getInstance().getViewBox().relativeViewboxCoordinateToAbsolute(Container.getInstance().getCursor()));
+        }
     }
 
     public void changeBackpack(Backpack backpack) {
@@ -135,16 +119,6 @@ public class Player extends Entity {
         } catch(Backpack.MaxMassExceeded ignored) {
             prevBackpack.drop();
         }
-    }
-
-    public Item setBackPack(Backpack backpack) {
-        backpack.setHolder(this);
-        return getAnchorPoints().put(AnchorPoint.BACK, backpack);
-    }
-
-    public Backpack getBackpack() {
-        final Item item = getAnchorPoints().get(AnchorPoint.BACK);
-        return item instanceof Backpack ? (Backpack) item : null;
     }
 
     public List<Item> getAllSurroundingItems() {
