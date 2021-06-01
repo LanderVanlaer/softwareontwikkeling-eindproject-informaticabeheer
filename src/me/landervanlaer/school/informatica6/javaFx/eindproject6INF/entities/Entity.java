@@ -18,7 +18,7 @@ abstract public class Entity extends Mover {
      * amount of px / second
      */
     public static double MOVEMENT_SPEED = 400;
-    public static double ROTATION_SPEED = 2;
+    public static double ROTATION_SPEED = 120;
     public static double DEFAULT_BACKPACK_MASS_MAX = 10;
     public static double DEFAULT_BACKPACK_MASS = 2;
     private final int maxHp;

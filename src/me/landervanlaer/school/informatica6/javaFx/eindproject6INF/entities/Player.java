@@ -72,8 +72,8 @@ public class Player extends Entity {
                     vector.add(new Vector(0, MOVEMENT_SPEED));
                     vector.setAngle(new Angle(getAngle().getRadians() + Math.PI));
                 }
-                case A, Q -> getAngle().setDegrees(getAngle().getDegrees() - Entity.ROTATION_SPEED);
-                case D -> getAngle().setDegrees(getAngle().getDegrees() + Entity.ROTATION_SPEED);
+                case A, Q -> getAngle().setDegrees(getAngle().getDegrees() - Entity.ROTATION_SPEED * Container.getInstance().getGameLoop().getFrameTimeSeconds());
+                case D -> getAngle().setDegrees(getAngle().getDegrees() + Entity.ROTATION_SPEED * Container.getInstance().getGameLoop().getFrameTimeSeconds());
                 case SPACE -> {
                     useAttack();
                 }

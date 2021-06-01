@@ -32,10 +32,23 @@ public class GameLoop extends AnimationTimer {
         return (int) (1 / getFrameTimeSeconds());
     }
 
+    /**
+     * Returns the time of the new frame in nanoseconds
+     *
+     * @return The frame time in nanoseconds
+     * @see #getFrameTimeSeconds()
+     */
     public int getFrameTime() {
         return (int) (getNowNanoTime() - getPrevNanoTime());
     }
 
+    /**
+     * Returns the time of the new frame in seconds
+     *
+     * @return The Frame time in seconds
+     * @see #getFrameTime()
+     * @see #ONE_SECOND_NANO
+     */
     public double getFrameTimeSeconds() {
         return (double) getFrameTime() / (double) ONE_SECOND_NANO;
     }
