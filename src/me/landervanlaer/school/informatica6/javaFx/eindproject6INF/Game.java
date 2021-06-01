@@ -6,6 +6,7 @@ import me.landervanlaer.math.Mover;
 import me.landervanlaer.math.Vector;
 import me.landervanlaer.objects.Drawable;
 import me.landervanlaer.objects.Updatable;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.BotFactory;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Entity;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Player;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
@@ -24,15 +25,16 @@ public class Game implements Drawable, Updatable {
     public static final int PLAYFIELD_WIDTH = 5000;
     public static final int VIEWBOX_HEIGHT = 785;
     public static final int VIEWBOX_WIDTH = 1190;
+    public static final int AMOUNT_OF_BOTS = 20;
     public static final double MU = .95;
 
     private final static Game game = new Game();
-
+    public final List<Entity> entities;
     private final List<Item> items;
     private final Viewbox viewBox;
+    private final List<Bullet> bullets;
     private Playfield playField;
     private Player player;
-    private List<Bullet> bullets;
 
     private Game() {
         this.items = new LinkedList<>();
@@ -41,7 +43,9 @@ public class Game implements Drawable, Updatable {
         this.player = new Player(PLAYER_MAX_HP, middle, PLAYER_MASS);
         this.viewBox = new Viewbox(VIEWBOX_WIDTH, VIEWBOX_HEIGHT, new Coordinate(middle.getX() - VIEWBOX_WIDTH / 2D, middle.getY() - VIEWBOX_HEIGHT / 2D));
         this.bullets = new LinkedList<>();
+        this.entities = new LinkedList<>();
     }
+
 
     public static Game getInstance() {
         return game;
@@ -68,6 +72,10 @@ public class Game implements Drawable, Updatable {
                 item.draw(gc);
             }
         });
+        getEntities().forEach(entity -> {
+            if(getViewBox().isVisible(entity))
+                entity.draw(gc);
+        });
         getBullets().forEach(bullet -> {
             if(getViewBox().isVisible(bullet)) {
                 bullet.draw(gc);
@@ -80,9 +88,17 @@ public class Game implements Drawable, Updatable {
     @Override
     public void update() {
         // TODO: 27/04/2021
+        spawnBotsIfNeeded();
         getBullets().removeIf(bullet -> !bullet.isMoving());
         getPlayer().update();
+        getEntities().forEach(Entity::update);
         getBullets().forEach(Mover::update);
+    }
+
+    private void spawnBotsIfNeeded() {
+        for(int i = getEntities().size(); i < Game.AMOUNT_OF_BOTS; i++) {
+            entities.add(BotFactory.generateRandom());
+        }
     }
 
     public List<Item> getItems() {
@@ -111,5 +127,9 @@ public class Game implements Drawable, Updatable {
 
     public List<Bullet> getBullets() {
         return bullets;
+    }
+
+    public List<Entity> getEntities() {
+        return entities;
     }
 }
