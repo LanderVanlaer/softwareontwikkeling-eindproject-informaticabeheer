@@ -3,6 +3,7 @@ package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities;
 import me.landervanlaer.math.Number;
 import me.landervanlaer.math.*;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.AnchorPoint;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.GameLoop;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Armor;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Backpack;
@@ -45,6 +46,10 @@ abstract public class Entity extends Mover {
             final Backpack backpack = new Backpack(DEFAULT_BACKPACK_MASS_MAX, DEFAULT_BACKPACK_MASS);
             getAnchorPoints().put(AnchorPoint.BACK, backpack);
         }
+
+        Game.getInstance().getPlayField().stayInBoundaries(getPos());
+
+        applyForce(Game.getFriction(this));
 
         super.update();
     }

@@ -5,6 +5,7 @@ import javafx.scene.paint.Color;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.math.Number;
 import me.landervanlaer.math.Vector;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
 public class Bot extends Entity {
@@ -24,10 +25,23 @@ public class Bot extends Entity {
     }
 
     public static Coordinate generateRandomCoordinateAround(Coordinate pos) {
-        return new Coordinate(
-                pos.getX() + (Math.random() < .5 ? -1 : 1) * Number.getRandom(GO_TO_DEVIATION * 2, RANDOM_LOCATION_MAX),
-                pos.getY() + (Math.random() < .5 ? -1 : 1) * Number.getRandom(GO_TO_DEVIATION * 2, RANDOM_LOCATION_MAX)
+        final double devi = GO_TO_DEVIATION * 1.4;
+        final double xMax = Game.getInstance().getPlayField().getWidth() - devi;
+        final double yMax = Game.getInstance().getPlayField().getHeight() - devi;
+
+        final Coordinate coordinate = new Coordinate(
+                Number.getRandom(
+                        (int) Number.constrain(pos.getX() - RANDOM_LOCATION_MAX, devi, xMax),
+                        (int) Number.constrain(pos.getX() + RANDOM_LOCATION_MAX, devi, xMax)),
+                Number.getRandom(
+                        (int) Number.constrain(pos.getY() - RANDOM_LOCATION_MAX, devi, yMax),
+                        (int) Number.constrain(pos.getY() + RANDOM_LOCATION_MAX, devi, yMax))
         );
+
+        if(coordinate.getDistanceBetween(pos) < GO_TO_DEVIATION)
+            return generateRandomCoordinateAround(pos);
+
+        return coordinate;
     }
 
     @Override

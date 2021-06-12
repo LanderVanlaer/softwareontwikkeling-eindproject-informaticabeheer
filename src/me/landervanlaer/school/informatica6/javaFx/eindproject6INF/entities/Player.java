@@ -57,8 +57,6 @@ public class Player extends Entity {
 
     @Override
     public void update() {
-        applyForce(Game.getFriction(this));
-
         final List<KeyCode> keys = Container.getInstance().getKeys();
 
         Vector vector = new Vector();
@@ -74,9 +72,7 @@ public class Player extends Entity {
                 }
                 case A, Q -> getAngle().setDegrees(getAngle().getDegrees() - Entity.ROTATION_SPEED * Container.getInstance().getGameLoop().getFrameTimeSeconds());
                 case D -> getAngle().setDegrees(getAngle().getDegrees() + Entity.ROTATION_SPEED * Container.getInstance().getGameLoop().getFrameTimeSeconds());
-                case SPACE -> {
-                    useAttack();
-                }
+                case SPACE -> useAttack();
             }
         }
         if(!vector.isZero())

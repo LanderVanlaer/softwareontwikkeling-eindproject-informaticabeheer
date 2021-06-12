@@ -32,8 +32,12 @@ public class Playfield implements Drawable {
 
         if(pos.getY() < 0)
             pos.add(new Vector(pos, new Coordinate(pos.getX(), 0)));
-        else if(pos.getX() > getHeight())
+        else if(pos.getY() > getHeight())
             pos.add(new Vector(pos, new Coordinate(pos.getX(), getHeight())));
+    }
+
+    public boolean isBetweenBorders(Coordinate pos) {
+        return pos.getX() > 0 && pos.getX() < getWidth() && pos.getY() > 0 && pos.getY() < getHeight();
     }
 
     public int getWidth() {

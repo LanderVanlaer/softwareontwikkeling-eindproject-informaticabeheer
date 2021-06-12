@@ -62,6 +62,11 @@ public class Bullet extends Mover {
 
     @Override
     public void update() {
+        if(!Game.getInstance().getPlayField().isBetweenBorders(getPos())) {
+            stop();
+            return;
+        }
+
         final Coordinate prevPos = new Coordinate(getPos());
         super.update();
 
