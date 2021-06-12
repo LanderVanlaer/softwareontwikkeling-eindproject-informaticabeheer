@@ -32,7 +32,11 @@ public class Bot extends Entity {
         gc.setFill(Color.SANDYBROWN);
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(2);
-        Draw.fillCircle(gc, getPos(), Number.constrain(getMass() / 2D, Bot.DRAWING_WIDTH_MIN, Bot.DRAWING_WIDTH_MAX));
+        Draw.fillCircle(gc, getPos(), getRadius());
+    }
+
+    public double getRadius() {
+        return Number.constrain(getMass() / 2D, Bot.DRAWING_WIDTH_MIN, Bot.DRAWING_WIDTH_MAX);
     }
 
     @Override

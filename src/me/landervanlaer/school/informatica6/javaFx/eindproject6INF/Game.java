@@ -2,7 +2,6 @@ package me.landervanlaer.school.informatica6.javaFx.eindproject6INF;
 
 import javafx.scene.canvas.GraphicsContext;
 import me.landervanlaer.math.Coordinate;
-import me.landervanlaer.math.Mover;
 import me.landervanlaer.math.Vector;
 import me.landervanlaer.objects.Drawable;
 import me.landervanlaer.objects.Updatable;
@@ -92,7 +91,8 @@ public class Game implements Drawable, Updatable {
         getBullets().removeIf(bullet -> !bullet.isMoving());
         getPlayer().update();
         getEntities().forEach(Entity::update);
-        getBullets().forEach(Mover::update);
+        getBullets().removeIf(Bullet::isDelete);
+        getBullets().forEach(Bullet::update);
     }
 
     private void spawnBotsIfNeeded() {
