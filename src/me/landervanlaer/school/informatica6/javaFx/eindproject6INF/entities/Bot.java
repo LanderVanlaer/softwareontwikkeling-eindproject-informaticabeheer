@@ -120,6 +120,13 @@ public class Bot extends Entity {
     }
 
     @Override
+    public void die() {
+        getBackpack().drop(getPos());
+        getBackpack().drop();
+        getHand().drop();
+    }
+
+    @Override
     public void useAttack() {
         // TODO: 27/04/2021
     }

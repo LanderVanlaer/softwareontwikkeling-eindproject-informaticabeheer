@@ -13,6 +13,7 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Container;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 // TODO: 27/04/2021 friction
@@ -88,8 +89,20 @@ public class Game implements Drawable, Updatable {
     public void update() {
         // TODO: 27/04/2021
         spawnBotsIfNeeded();
+
         getPlayer().update();
-        getEntities().forEach(Entity::update);
+        final Iterator<Entity> entityIterator = getEntities().iterator();
+
+        while(entityIterator.hasNext()) {
+            final Entity entity = entityIterator.next();
+            if(entity.isDead()) {
+                entity.die();
+                entityIterator.remove();
+                continue;
+            }
+            entity.update();
+        }
+
         getBullets().removeIf(Bullet::isDelete);
         getBullets().forEach(Bullet::update);
     }

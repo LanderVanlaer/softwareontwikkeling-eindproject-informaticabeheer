@@ -44,8 +44,8 @@ public class Backpack extends Item {
     @Override
     public void drop(Coordinate pos) {
         super.drop(pos);
-        for(Item item : getItems()) {
-            item.drop(pos);
+        while(getItems().size() > 0) {
+            dropItem(0);
         }
     }
 

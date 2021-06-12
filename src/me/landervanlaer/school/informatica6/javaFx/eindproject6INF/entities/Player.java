@@ -86,6 +86,11 @@ public class Player extends Entity {
     }
 
     @Override
+    public void die() {
+        System.out.println("GAME OVER");
+    }
+
+    @Override
     public void useAttack() {
         if(getHand() instanceof Weapon) {
             final Weapon weapon = (Weapon) getHand();

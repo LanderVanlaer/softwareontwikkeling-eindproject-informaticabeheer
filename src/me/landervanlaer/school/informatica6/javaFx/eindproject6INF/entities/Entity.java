@@ -88,6 +88,8 @@ abstract public class Entity extends Mover {
         reduceHp(damage);
     }
 
+    public abstract void die();
+
     public void addItemToBackpack(Item item) throws NoBackpack {
         final Item backpack = getAnchorPoints().get(AnchorPoint.BACK);
 
