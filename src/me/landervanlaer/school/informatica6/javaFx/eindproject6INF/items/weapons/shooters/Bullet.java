@@ -81,10 +81,6 @@ public class Bullet extends Mover {
         return damage;
     }
 
-    public boolean isMoving() {
-        return !getVel().isZero();
-    }
-
     public void stop() {
         setDelete(true);
     }

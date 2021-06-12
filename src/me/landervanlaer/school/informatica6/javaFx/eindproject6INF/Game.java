@@ -88,7 +88,6 @@ public class Game implements Drawable, Updatable {
     public void update() {
         // TODO: 27/04/2021
         spawnBotsIfNeeded();
-        getBullets().removeIf(bullet -> !bullet.isMoving());
         getPlayer().update();
         getEntities().forEach(Entity::update);
         getBullets().removeIf(Bullet::isDelete);
