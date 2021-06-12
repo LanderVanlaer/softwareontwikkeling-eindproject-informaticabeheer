@@ -1,6 +1,7 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import me.landervanlaer.math.Angle;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
@@ -9,6 +10,34 @@ public abstract class Draw {
     public static void clear(GraphicsContext context) {
         context.clearRect(0, 0, context.getCanvas().getWidth(), context.getCanvas().getHeight());
         context.clearRect(0, 0, 400, 400);
+    }
+
+    public static void hpBar(GraphicsContext context, Coordinate coordinate, double percentage, double width, double height) {
+        context.setLineWidth(1);
+        context.setStroke(Color.rgb(0, 0, 0, .5));
+
+        if(percentage > .5)
+            context.setFill(Color.rgb(0, 168, 34, .5));
+        else if(percentage > .25)
+            context.setFill(Color.rgb(191, 69, 19, .5));
+        else
+            context.setFill(Color.rgb(139, 0, 0, .5));
+
+        //middle of bar
+        final Coordinate rc = relativeCoordinate(coordinate);
+
+        final Coordinate leftTop = new Coordinate(rc.getX() - width / 2D, rc.getY() - height / 2D);
+
+        fillRectangle(context, leftTop, width * percentage, height);
+        strokeRectangle(context, leftTop, width, height);
+    }
+
+    public static void fillRectangle(GraphicsContext context, Coordinate coordinate, double width, double height) {
+        context.fillRect(coordinate.getX(), coordinate.getY(), width, height);
+    }
+
+    public static void strokeRectangle(GraphicsContext context, Coordinate coordinate, double width, double height) {
+        context.strokeRect(coordinate.getX(), coordinate.getY(), width, height);
     }
 
     public static void fillCircle(GraphicsContext context, Coordinate pos, double width) {

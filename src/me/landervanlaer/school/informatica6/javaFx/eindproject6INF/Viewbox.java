@@ -5,7 +5,7 @@ import me.landervanlaer.math.Mover;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
 
 public class Viewbox {
-    public final int DEVIATION = 10;
+    public final int DEVIATION = 100;
     private int width;
     private int height;
     private Coordinate pos;
