@@ -6,6 +6,10 @@ import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.math.Number;
 import me.landervanlaer.math.Vector;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Armor;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Backpack;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.ItemFactory;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.WeaponFactory;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
 public class Bot extends Entity {
@@ -22,6 +26,44 @@ public class Bot extends Entity {
 
     public Bot(int maxHp, Coordinate pos, double mass) {
         super(maxHp, pos, mass);
+
+        final double hpPercentageOfMax = (double) getHp() / MAX_HP;
+
+        int randomAmountOfItems;
+        int maxArmorProtection;
+        int maxBackpackWeight;
+        if(hpPercentageOfMax > .70) {
+            setHand(WeaponFactory.AssaultRifleFactory.generateRandom());
+
+            maxBackpackWeight = Number.getRandom(20, 70);
+            setBackPack(new Backpack(maxBackpackWeight, Number.getRandom(2, 10)));
+
+            randomAmountOfItems = Number.getRandom(4, 12);
+            maxArmorProtection = Armor.PROTECTION_MAX;
+        } else if(hpPercentageOfMax > .33) {
+            setHand(WeaponFactory.SubmachineGunFactory.generateRandom());
+
+            maxBackpackWeight = Number.getRandom(10, 50);
+            setBackPack(new Backpack(maxBackpackWeight, Number.getRandom(2, 10)));
+
+            randomAmountOfItems = Number.getRandom(2, 6);
+            maxArmorProtection = (int) (Armor.PROTECTION_MAX * .6);
+        } else {
+            setHand(WeaponFactory.PistolFactory.generateRandom());
+
+            maxBackpackWeight = Number.getRandom(5, 30);
+            setBackPack(new Backpack(maxBackpackWeight, Number.getRandom(2, 10)));
+
+            randomAmountOfItems = Number.getRandom(0, 4);
+            maxArmorProtection = 20;
+        }
+        final Backpack backpack = getBackpack();
+        for(int i = 0; i < randomAmountOfItems; i++) {
+            try {
+                backpack.addItem(ItemFactory.generateRandom(Number.getRandom(2, 10), Number.getRandom(Armor.PROTECTION_MIN, maxArmorProtection), maxBackpackWeight));
+            } catch(Backpack.MaxMassExceeded ignore) {
+            }
+        }
     }
 
     public static Coordinate generateRandomCoordinateAround(Coordinate pos) {
@@ -79,7 +121,7 @@ public class Bot extends Entity {
 
     @Override
     public void useAttack() {
-        // TODO: 27/04/2021  
+        // TODO: 27/04/2021
     }
 
     public Coordinate getGoTo() {

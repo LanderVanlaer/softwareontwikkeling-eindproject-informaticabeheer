@@ -117,6 +117,7 @@ abstract public class Entity extends Mover {
     }
 
     public Item setHand(Weapon weapon) {
+        weapon.setHolder(this);
         return getAnchorPoints().put(AnchorPoint.HAND, weapon);
     }
 
