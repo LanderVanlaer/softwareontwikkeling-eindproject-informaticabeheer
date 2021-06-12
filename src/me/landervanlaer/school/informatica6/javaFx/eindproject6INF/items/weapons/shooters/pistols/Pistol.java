@@ -4,7 +4,6 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.Shooter;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.magazines.LightMagazine;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.magazines.Magazine;
-import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.magazines.MediumMagazine;
 
 public abstract class Pistol extends Shooter<LightMagazine> {
     public Pistol(BulletGenerator bulletGenerator, double weight) {
@@ -13,6 +12,6 @@ public abstract class Pistol extends Shooter<LightMagazine> {
 
     @Override
     public boolean canHaveMagazine(Magazine magazine) {
-        return magazine instanceof MediumMagazine;
+        return magazine instanceof LightMagazine;
     }
 }

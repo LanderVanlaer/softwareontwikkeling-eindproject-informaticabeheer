@@ -47,6 +47,7 @@ public abstract class Shooter<M extends Magazine> extends Weapon {
             for(Item item : getHolder().getBackpack().getItems()) {
                 if(item instanceof Magazine && canHaveMagazine((Magazine) item) && !((Magazine) item).isEmpty()) {
                     setMagazine((M) item);
+                    return;
                 }
             }
         }
