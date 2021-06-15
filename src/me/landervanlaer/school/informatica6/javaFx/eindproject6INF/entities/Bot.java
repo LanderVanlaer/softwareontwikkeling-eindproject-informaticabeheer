@@ -16,6 +16,7 @@ public class Bot extends Entity {
     public static final int MAX_HP = 200;
     public static final int MIN_HP = 50;
     public static final int HP_BAR_HEIGHT = 10;
+    public static final int ARMOR_SPAWN_MIN = 10;
     private static final int DRAWING_WIDTH_MIN = 20;
     private static final int DRAWING_WIDTH_MAX = 100;
     public static int GO_TO_DEVIATION = 50;
@@ -60,7 +61,7 @@ public class Bot extends Entity {
         final Backpack backpack = getBackpack();
         for(int i = 0; i < randomAmountOfItems; i++) {
             try {
-                backpack.addItem(ItemFactory.generateRandom(Number.getRandom(2, 10), Number.getRandom(Armor.PROTECTION_MIN, maxArmorProtection), maxBackpackWeight));
+                backpack.addItem(ItemFactory.generateRandom(Number.getRandom(2, 10), Number.getRandom(ARMOR_SPAWN_MIN, maxArmorProtection), maxBackpackWeight));
             } catch(Backpack.MaxMassExceeded ignore) {
             }
         }
@@ -129,6 +130,11 @@ public class Bot extends Entity {
     @Override
     public void useAttack() {
         // TODO: 27/04/2021
+    }
+
+    @Override
+    public double getbulletStartLocationRadius() {
+        return getRadius();
     }
 
     public Coordinate getGoTo() {

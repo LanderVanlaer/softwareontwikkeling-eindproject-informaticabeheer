@@ -8,7 +8,7 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 import java.text.MessageFormat;
 
 public class Armor extends Item {
-    public static final int PROTECTION_MIN = 1;
+    public static final int PROTECTION_MIN = 0;
     public static final int PROTECTION_MAX = 100;
 
     private int protection;
@@ -41,11 +41,14 @@ public class Armor extends Item {
     }
 
     public int reduceProtection(int i) throws IllegalArgumentException {
-        final int pro = i - getProtection();
+        final int pro = getProtection() - i;
 
-        setProtection(getProtection() - i);
+        setProtection(Number.constrain(pro, 0, Integer.MAX_VALUE));
 
-        return Number.constrain(pro, 0, Integer.MAX_VALUE);
+        if(getProtection() == 0)
+            return Math.abs(pro);
+
+        return 0;
     }
 
     public double getProtectionPercentage() {

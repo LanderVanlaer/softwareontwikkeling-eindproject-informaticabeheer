@@ -1,5 +1,6 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters;
 
+import me.landervanlaer.math.Angle;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.math.Vector;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.magazines.Magazine;
@@ -29,7 +30,13 @@ public class BulletGenerator {
 
         shooter.getMagazine().fireBullet();
         updatePrevFire();
-        return new Bullet(getDamage(), new Coordinate(shooter.getHolder().getPos()), vel);
+
+        final Coordinate startLocation = new Coordinate(shooter.getHolder().getPos());
+        //bullet will hit shooter
+        final Vector startLocationVector = vel.clone();
+        startLocationVector.setMag(shooter.getHolder().getbulletStartLocationRadius());
+        startLocation.add(startLocationVector);
+        return new Bullet(getDamage(), startLocation, vel);
     }
 
     public int getDamage() {

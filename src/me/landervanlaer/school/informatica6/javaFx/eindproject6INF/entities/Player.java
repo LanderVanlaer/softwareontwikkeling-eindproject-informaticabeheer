@@ -36,7 +36,7 @@ public class Player extends Entity {
         gc.setStroke(Color.BLACK);
         gc.setFill(Color.DARKGRAY);
 //        Draw.fillCircle(gc, getPos(), getMass() / 5);
-        Draw.fillTriangle(gc, getPos(), getAngle(), getMass() / 2D);
+        Draw.fillTriangle(gc, getPos(), getAngle(), getRadiusOfTriangle());
 
 
         gc.setLineWidth(8);
@@ -53,6 +53,10 @@ public class Player extends Entity {
         gc.setLineDashes(10);
         Draw.line(gc, getPos(), Container.getInstance().getCursor(), false, true);
         gc.setLineDashes(0);
+    }
+
+    public double getRadiusOfTriangle() {
+        return getMass() / 2D;
     }
 
     @Override
@@ -96,6 +100,11 @@ public class Player extends Entity {
             final Weapon weapon = (Weapon) getHand();
             weapon.attack(Game.getInstance().getViewBox().relativeViewboxCoordinateToAbsolute(Container.getInstance().getCursor()));
         }
+    }
+
+    @Override
+    public double getbulletStartLocationRadius() {
+        return getRadiusOfTriangle();
     }
 
     public void changeBackpack(Backpack backpack) {

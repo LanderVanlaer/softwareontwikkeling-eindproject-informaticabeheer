@@ -174,6 +174,8 @@ abstract public class Entity extends Mover {
         this.angle = angle;
     }
 
+    public abstract double getbulletStartLocationRadius();
+
     public static class NoBackpack extends Exception {
     }
 }
