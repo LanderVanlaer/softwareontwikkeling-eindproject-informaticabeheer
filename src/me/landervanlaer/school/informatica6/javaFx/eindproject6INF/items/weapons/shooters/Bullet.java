@@ -92,13 +92,13 @@ public class Bullet extends Mover {
         double y = a1 * x + b1;
 
         return isNumberBetween(x, p1.getX(), p2.getX())
-                && isNumberBetween(x, p3.getX(), p3.getX())
+                && isNumberBetween(x, p3.getX(), p4.getX())
                 && isNumberBetween(y, p1.getY(), p2.getY())
                 && isNumberBetween(y, p3.getY(), p4.getY());
     }
 
     public static boolean isNumberBetween(double n, double a, double b) {
-        return Math.min(a, b) < n && n < Math.max(a, b);
+        return Math.min(a, b) <= n && n <= Math.max(a, b);
     }
 
     /**

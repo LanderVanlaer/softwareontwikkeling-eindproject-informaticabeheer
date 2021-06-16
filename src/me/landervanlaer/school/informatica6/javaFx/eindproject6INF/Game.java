@@ -1,8 +1,6 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import me.landervanlaer.math.Angle;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.math.Vector;
 import me.landervanlaer.objects.Drawable;

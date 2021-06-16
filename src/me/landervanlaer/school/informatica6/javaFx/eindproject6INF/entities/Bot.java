@@ -12,6 +12,8 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.ItemFac
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.WeaponFactory;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
+import java.util.List;
+
 public class Bot extends Entity {
     public static final int MAX_HP = 200;
     public static final int MIN_HP = 50;
@@ -19,9 +21,11 @@ public class Bot extends Entity {
     public static final int ARMOR_SPAWN_MIN = 10;
     private static final int DRAWING_WIDTH_MIN = 20;
     private static final int DRAWING_WIDTH_MAX = 100;
-    public static int GO_TO_DEVIATION = 50;
+    public static int GO_TO_DEVIATION = 100;
     public static int RANDOM_LOCATION_MAX = 400;
-    public static double MOVEMENT_SPEED = Entity.MOVEMENT_SPEED / 4D;
+    public static int VISION_LENGTH = 800;
+    public static int ATTACK_GO_TO_SQUARE_WIDTH = 325;
+    public static double MOVEMENT_SPEED = Entity.MOVEMENT_SPEED / 1.1;
 
     private Coordinate goTo;
 
@@ -87,6 +91,25 @@ public class Bot extends Entity {
         return coordinate;
     }
 
+    public static Coordinate intersectionOfLines(Coordinate p1, Coordinate p2, Coordinate p3, Coordinate p4) {
+        final double a1 = (p1.getY() - p2.getY()) / (p1.getX() - p2.getX());
+        final double a2 = (p3.getY() - p4.getY()) / (p3.getX() - p4.getX());
+
+        //parallel
+        if(a1 == a2) return null;
+
+        final double b1 = p1.getY() - a1 * p1.getX();
+        final double b2 = p3.getY() - a2 * p3.getX();
+
+        if(Double.isInfinite(a1)) return new Coordinate(p1.getX(), a2 * p1.getX() + b2);
+        if(Double.isInfinite(a2)) return new Coordinate(p3.getX(), a1 * p3.getX() + b1);
+
+        final double x = (b2 - b1) / (a1 - a2);
+        final double y = a1 * x + b1;
+
+        return new Coordinate(x, y);
+    }
+
     @Override
     public void draw(GraphicsContext gc) {
         gc.setFill(Color.SANDYBROWN);
@@ -97,6 +120,30 @@ public class Bot extends Entity {
         Draw.fillCircle(gc, getPos(), d);
 
         Draw.hpBar(gc, new Coordinate(getPos().getX(), getPos().getY() - d / 2D - HP_BAR_HEIGHT), getHpPercentage(), d, HP_BAR_HEIGHT);
+
+//        gc.setStroke(Color.BLACK);
+//        gc.setLineWidth(2);
+//        Draw.line(gc, getPos(), getGoTo());
+//
+//        gc.setStroke(Color.RED);
+//        final Entity entity = getClosestEnemy();
+//        if(entity == null) return;
+//        Draw.line(gc, getPos(), entity.getPos());
+
+//        final Coordinate leftTop = new Coordinate(getPos());
+//        leftTop.add(new Vector(-ATTACK_GO_TO_SQUARE_WIDTH, -ATTACK_GO_TO_SQUARE_WIDTH));
+//        final Coordinate leftBottom = new Coordinate(getPos());
+//        leftBottom.add(new Vector(-ATTACK_GO_TO_SQUARE_WIDTH, +ATTACK_GO_TO_SQUARE_WIDTH));
+//        final Coordinate rightTop = new Coordinate(getPos());
+//        rightTop.add(new Vector(+ATTACK_GO_TO_SQUARE_WIDTH, -ATTACK_GO_TO_SQUARE_WIDTH));
+//        final Coordinate rightBottom = new Coordinate(getPos());
+//        rightBottom.add(new Vector(+ATTACK_GO_TO_SQUARE_WIDTH, +ATTACK_GO_TO_SQUARE_WIDTH));
+//        gc.setStroke(Color.GRAY);
+//        gc.setLineWidth(1);
+//        Draw.line(gc, leftBottom, leftTop);
+//        Draw.line(gc, leftTop, rightTop);
+//        Draw.line(gc, rightTop, rightBottom);
+//        Draw.line(gc, rightBottom, leftBottom);
     }
 
     public double getDiameter() {
@@ -111,6 +158,8 @@ public class Bot extends Entity {
     public void update() {
         if(getGoTo() == null || getGoTo().getDistanceBetween(getPos()) <= GO_TO_DEVIATION)
             setGoTo(Bot.generateRandomCoordinateAround(getPos()));
+
+        useAttack();
 
         final Vector goToVector = new Vector(getPos(), getGoTo());
         goToVector.setMag(Bot.MOVEMENT_SPEED);
@@ -129,12 +178,57 @@ public class Bot extends Entity {
 
     @Override
     public void useAttack() {
-        // TODO: 27/04/2021
+        final Entity entity = getClosestEnemy();
+        if(entity == null) return;
+
+        final Coordinate leftTop = new Coordinate(entity.getPos());
+        leftTop.add(new Vector(-ATTACK_GO_TO_SQUARE_WIDTH, -ATTACK_GO_TO_SQUARE_WIDTH));
+
+        final Coordinate leftBottom = new Coordinate(entity.getPos());
+        leftBottom.add(new Vector(-ATTACK_GO_TO_SQUARE_WIDTH, +ATTACK_GO_TO_SQUARE_WIDTH));
+
+        final Coordinate rightTop = new Coordinate(entity.getPos());
+        rightTop.add(new Vector(+ATTACK_GO_TO_SQUARE_WIDTH, -ATTACK_GO_TO_SQUARE_WIDTH));
+
+        final Coordinate rightBottom = new Coordinate(entity.getPos());
+        rightBottom.add(new Vector(+ATTACK_GO_TO_SQUARE_WIDTH, +ATTACK_GO_TO_SQUARE_WIDTH));
+
+        final Coordinate[] intersections = new Coordinate[]{
+                intersectionOfLines(entity.getPos(), getPos(), leftBottom, leftTop),
+                intersectionOfLines(entity.getPos(), getPos(), leftTop, rightTop),
+                intersectionOfLines(entity.getPos(), getPos(), rightTop, rightBottom),
+                intersectionOfLines(entity.getPos(), getPos(), rightBottom, leftBottom),
+        };
+
+        Coordinate best = null;
+        for(Coordinate next : intersections) {
+            if(best == null) {
+                best = next;
+                continue;
+            }
+            if(next == null) continue;
+            if(best.getDistanceBetween(getPos()) > next.getDistanceBetween(getPos())) {
+                best = next;
+            }
+
+        }
+        setGoTo(best);
     }
 
     @Override
     public double getbulletStartLocationRadius() {
         return getRadius();
+    }
+
+    public Entity getClosestEnemy() {
+        final Player player = Game.getInstance().getPlayer();
+        final List<Entity> entities = Game.getInstance().getEntities();
+        final Entity closestEntity = entities.stream().filter(entity -> entity != this && entity.getPos().getDistanceBetween(getPos()) <= VISION_LENGTH).min((o1, o2) -> (int) o1.getPos().getDistanceBetween(o2.getPos())).orElse(null);
+
+        if(player.getPos().getDistanceBetween(getPos()) <= VISION_LENGTH) {
+            return closestEntity == null || player.getPos().getDistanceBetween(getPos()) < closestEntity.getPos().getDistanceBetween(getPos()) ? player : closestEntity;
+        }
+        return closestEntity;
     }
 
     public Coordinate getGoTo() {

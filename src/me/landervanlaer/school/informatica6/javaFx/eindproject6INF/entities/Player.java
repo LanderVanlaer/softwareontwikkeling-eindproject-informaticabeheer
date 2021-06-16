@@ -53,6 +53,22 @@ public class Player extends Entity {
         gc.setLineDashes(10);
         Draw.line(gc, getPos(), Container.getInstance().getCursor(), false, true);
         gc.setLineDashes(0);
+
+
+//        final Coordinate leftTop = new Coordinate(getPos());
+//        leftTop.add(new Vector(-ATTACK_GO_TO_SQUARE_WIDTH, -ATTACK_GO_TO_SQUARE_WIDTH));
+//        final Coordinate leftBottom = new Coordinate(getPos());
+//        leftBottom.add(new Vector(-ATTACK_GO_TO_SQUARE_WIDTH, +ATTACK_GO_TO_SQUARE_WIDTH));
+//        final Coordinate rightTop = new Coordinate(getPos());
+//        rightTop.add(new Vector(+ATTACK_GO_TO_SQUARE_WIDTH, -ATTACK_GO_TO_SQUARE_WIDTH));
+//        final Coordinate rightBottom = new Coordinate(getPos());
+//        rightBottom.add(new Vector(+ATTACK_GO_TO_SQUARE_WIDTH, +ATTACK_GO_TO_SQUARE_WIDTH));
+//        gc.setStroke(Color.GRAY);
+//        gc.setLineWidth(1);
+//        Draw.line(gc, leftBottom, leftTop);
+//        Draw.line(gc, leftTop, rightTop);
+//        Draw.line(gc, rightTop, rightBottom);
+//        Draw.line(gc, rightBottom, leftBottom);
     }
 
     public double getRadiusOfTriangle() {
