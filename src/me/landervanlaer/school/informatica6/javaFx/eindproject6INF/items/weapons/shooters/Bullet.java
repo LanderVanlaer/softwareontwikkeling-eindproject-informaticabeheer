@@ -14,7 +14,7 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Play
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
 public class Bullet extends Mover {
-    public static final long MAX_LIFE_TIME = 10L * GameLoop.ONE_SECOND_NANO;
+    public static final long MAX_LIFE_TIME = 2L * GameLoop.ONE_SECOND_NANO;
     /**
      * @see <a href="https://howtodoinjava.com/java-examples/correctly-compare-float-double/">https://howtodoinjava.com/java-examples/correctly-compare-float-double/</a>
      */

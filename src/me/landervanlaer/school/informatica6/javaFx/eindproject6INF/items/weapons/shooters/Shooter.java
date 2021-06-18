@@ -4,7 +4,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
-import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.Weapon;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.magazines.Magazine;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
@@ -44,12 +43,7 @@ public abstract class Shooter<M extends Magazine> extends Weapon {
     @SuppressWarnings("unchecked")
     public void findAndSetMagazine() {
         if(getMagazine() == null || getMagazine().isEmpty()) {
-            for(Item item : getHolder().getBackpack().getItems()) {
-                if(item instanceof Magazine && canHaveMagazine((Magazine) item) && !((Magazine) item).isEmpty()) {
-                    setMagazine((M) item);
-                    return;
-                }
-            }
+            setMagazine((M) getHolder().getNewMagazine(this::canHaveMagazine));
         }
     }
 

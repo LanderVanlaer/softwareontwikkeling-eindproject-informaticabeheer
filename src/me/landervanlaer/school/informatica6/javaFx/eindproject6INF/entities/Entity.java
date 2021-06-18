@@ -10,6 +10,7 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Backpac
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.Weapon;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.Bullet;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.magazines.Magazine;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Container;
 
 import java.util.EnumMap;
@@ -99,6 +100,20 @@ abstract public class Entity extends Mover {
         ((Backpack) backpack).addItem(item);
     }
 
+    public Magazine getNewMagazine(MagazineChecker magazineChecker) {
+        for(Item item : getBackpack().getItems()) {
+            if(!(item instanceof Magazine)) continue;
+
+            final Magazine magazine = (Magazine) item;
+
+            if(magazineChecker.canHaveMagazine(magazine) && !magazine.isEmpty()) {
+                getBackpack().removeItem(magazine);
+                return magazine;
+            }
+        }
+        return null;
+    }
+
     public void reduceHp(int hp) {
         if(hp > 0)
             setHp(getHp() - hp);
@@ -175,6 +190,10 @@ abstract public class Entity extends Mover {
     }
 
     public abstract double getbulletStartLocationRadius();
+
+    public interface MagazineChecker {
+        boolean canHaveMagazine(Magazine magazine);
+    }
 
     public static class NoBackpack extends Exception {
     }

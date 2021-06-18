@@ -6,10 +6,12 @@ import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.math.Number;
 import me.landervanlaer.math.Vector;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
-import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Armor;
-import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Backpack;
-import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.ItemFactory;
-import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.WeaponFactory;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.*;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.Weapon;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.magazines.HeavyMagazine;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.magazines.LightMagazine;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.magazines.Magazine;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.magazines.MediumMagazine;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
 import java.util.List;
@@ -21,6 +23,7 @@ public class Bot extends Entity {
     public static final int ARMOR_SPAWN_MIN = 10;
     private static final int DRAWING_WIDTH_MIN = 20;
     private static final int DRAWING_WIDTH_MAX = 100;
+    private static final int BULLET_LOCATION_EXTRA_RADIUS = 10;
     public static int GO_TO_DEVIATION = 100;
     public static int RANDOM_LOCATION_MAX = 400;
     public static int VISION_LENGTH = 800;
@@ -28,6 +31,7 @@ public class Bot extends Entity {
     public static double MOVEMENT_SPEED = Entity.MOVEMENT_SPEED / 1.1;
 
     private Coordinate goTo;
+    private Entity currentEnemy;
 
     public Bot(int maxHp, Coordinate pos, double mass) {
         super(maxHp, pos, mass);
@@ -156,6 +160,7 @@ public class Bot extends Entity {
 
     @Override
     public void update() {
+        setCurrentEnemy(getClosestEnemy());
         if(getGoTo() == null || getGoTo().getDistanceBetween(getPos()) <= GO_TO_DEVIATION)
             setGoTo(Bot.generateRandomCoordinateAround(getPos()));
 
@@ -177,8 +182,18 @@ public class Bot extends Entity {
     }
 
     @Override
+    public Magazine getNewMagazine(MagazineChecker magazineChecker) {
+        Magazine[] magazines = new Magazine[]{new LightMagazine(), new MediumMagazine(), new HeavyMagazine()};
+        for(Magazine magazine : magazines) {
+            if(magazineChecker.canHaveMagazine(magazine))
+                return magazine;
+        }
+        throw new InternalError("The bot is not able to make a new Magazine that meets the given requirements");
+    }
+
+    @Override
     public void useAttack() {
-        final Entity entity = getClosestEnemy();
+        final Entity entity = getCurrentEnemy();
         if(entity == null) return;
 
         final Coordinate leftTop = new Coordinate(entity.getPos());
@@ -213,11 +228,21 @@ public class Bot extends Entity {
 
         }
         setGoTo(best);
+
+        shootTo(entity.getPos());
     }
 
     @Override
     public double getbulletStartLocationRadius() {
-        return getRadius();
+        return getRadius() + BULLET_LOCATION_EXTRA_RADIUS;
+    }
+
+    public void shootTo(Coordinate coordinate) {
+        if(coordinate == null) return;
+
+        final Item hand = getHand();
+
+        if(hand instanceof Weapon) ((Weapon) hand).attack(coordinate);
     }
 
     public Entity getClosestEnemy() {
@@ -237,5 +262,13 @@ public class Bot extends Entity {
 
     public void setGoTo(Coordinate goTo) {
         this.goTo = goTo;
+    }
+
+    public Entity getCurrentEnemy() {
+        return currentEnemy;
+    }
+
+    public void setCurrentEnemy(Entity currentEnemy) {
+        this.currentEnemy = currentEnemy;
     }
 }
