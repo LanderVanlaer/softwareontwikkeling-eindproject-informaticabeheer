@@ -9,7 +9,6 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
 public abstract class Draw {
     public static void clear(GraphicsContext context) {
         context.clearRect(0, 0, context.getCanvas().getWidth(), context.getCanvas().getHeight());
-        context.clearRect(0, 0, 400, 400);
     }
 
     public static void hpBar(GraphicsContext context, Coordinate coordinate, double percentage, double width, double height) {
@@ -40,10 +39,12 @@ public abstract class Draw {
         context.strokeRect(coordinate.getX(), coordinate.getY(), width, height);
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
     public static void fillCircle(GraphicsContext context, Coordinate pos, double width) {
         fillOval(context, pos, width, width);
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
     public static void strokeCircle(GraphicsContext context, Coordinate pos, double width) {
         strokeOval(context, pos, width, width);
     }

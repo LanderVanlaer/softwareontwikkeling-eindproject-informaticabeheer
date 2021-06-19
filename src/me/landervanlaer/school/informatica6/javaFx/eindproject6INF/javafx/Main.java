@@ -4,34 +4,27 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import me.landervanlaer.math.Coordinate;
 
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("container.fxml"));
         Parent root = loader.load();
-        Scene scene = new Scene(root);
         Container controller = loader.getController();
 
-        scene.setOnKeyPressed(event -> {
-            if(!controller.getKeys().contains(event.getCode())) {
-                controller.getKeys().add(event.getCode());
+        Scene scene = new Scene(root);
+        controller.initialize(scene);
+
+        primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if(KeyCode.F11.equals(event.getCode())) {
+                primaryStage.setFullScreen(!primaryStage.isFullScreen());
             }
-        });
-        scene.setOnKeyReleased(event -> {
-//            controller.getKeys().put(event.getCode(), false);
-            controller.getKeys().remove(event.getCode());
-        });
-        scene.setOnMouseMoved(event -> {
-            final Coordinate cursor = Container.getInstance().getCursor();
-            cursor.setX(event.getSceneX());
-            cursor.setY(event.getSceneY() - Container.getInstance().getMenuBar().getHeight());
         });
         primaryStage.setTitle("Eindproject 6INF");
         primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
         primaryStage.show();
     }
 }

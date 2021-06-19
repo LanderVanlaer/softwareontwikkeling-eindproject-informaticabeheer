@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -73,10 +72,8 @@
     </SplitPane>
   </right>
   <center>
-    <Canvas fx:id="canvas" height="785.0" onMouseClicked="#canvasClick" width="1190.0" BorderPane.alignment="TOP_LEFT">
-      <BorderPane.margin>
-        <Insets/>
-      </BorderPane.margin>
-    </Canvas>
+    <Pane fx:id="canvasAnchorPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <Canvas fx:id="canvas" height="400" onMouseClicked="#canvasClick" width="400"/>
+    </Pane>
   </center>
 </BorderPane>

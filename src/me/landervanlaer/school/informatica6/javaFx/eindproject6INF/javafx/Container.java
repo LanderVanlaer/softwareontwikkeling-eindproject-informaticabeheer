@@ -2,12 +2,13 @@ package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.objects.Updatable;
@@ -24,19 +25,20 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.magazines.LightMagazine;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.magazines.MediumMagazine;
 
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class Container implements Initializable, Updatable {
+public class Container implements Updatable {
     public static final int FPS_UPDATE_TIME = GameLoop.ONE_SECOND_NANO / 4;
     private static Container container;
     private final List<KeyCode> keys = new LinkedList<>();
     private final GameLoop gameLoop = new GameLoop();
     private final Coordinate cursor = new Coordinate(0, 0);
+    private Scene scene;
 
+    @FXML
+    private Pane canvasAnchorPane;
     @FXML
     private Label backpackCurrentMass;
     @FXML
@@ -100,10 +102,25 @@ public class Container implements Initializable, Updatable {
         });
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(Scene scene) {
         Container.container = this;
-        gameLoop.start();
+        setScene(scene);
+        resize();
+
+        scene.setOnKeyPressed(event -> {
+            if(!getKeys().contains(event.getCode())) {
+                getKeys().add(event.getCode());
+            }
+        });
+        scene.setOnKeyReleased(event -> {
+            getKeys().remove(event.getCode());
+        });
+        scene.setOnMouseMoved(event -> {
+            final Coordinate cursor = getCursor();
+            cursor.setX(event.getSceneX());
+            cursor.setY(event.getSceneY() - Container.getInstance().getMenuBar().getHeight());
+        });
+
 
         Game.getInstance().initialize();
 
@@ -194,6 +211,13 @@ public class Container implements Initializable, Updatable {
             backChoice.getItems().add(backItem);
             backChoice.getSelectionModel().select(backItem);
         }
+
+        gameLoop.start();
+    }
+
+    private void resize() {
+        canvas.setWidth(canvasAnchorPane.getWidth());
+        canvas.setHeight(canvasAnchorPane.getHeight());
     }
 
     private void showError(String message) {
@@ -204,6 +228,7 @@ public class Container implements Initializable, Updatable {
     @Override
     public void update() {
         Game.getInstance().update();
+        resize();
     }
 
     public void draw() {
@@ -323,5 +348,17 @@ public class Container implements Initializable, Updatable {
 
     public void canvasClick(MouseEvent mouseEvent) {
         canvas.requestFocus();
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
+    }
+
+    public Scene getScene() {
+        return scene;
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
     }
 }

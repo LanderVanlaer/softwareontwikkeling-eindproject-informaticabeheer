@@ -100,7 +100,8 @@ public class Player extends Entity {
         applyForce(vector);
 
         final Viewbox viewbox = Game.getInstance().getViewBox();
-        viewbox.setPos(new Coordinate(getPos().getX() - viewbox.getWidth() / 2D, getPos().getY() - viewbox.getHeight() / 2D));
+        viewbox.getPos().setX(getPos().getX() - viewbox.getWidth() / 2D);
+        viewbox.getPos().setY(getPos().getY() - viewbox.getHeight() / 2D);
 
         super.update();
     }

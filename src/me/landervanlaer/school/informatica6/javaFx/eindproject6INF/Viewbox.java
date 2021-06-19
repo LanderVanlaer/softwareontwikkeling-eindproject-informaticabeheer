@@ -3,20 +3,13 @@ package me.landervanlaer.school.informatica6.javaFx.eindproject6INF;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.math.Mover;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Container;
 
 public class Viewbox {
     public final int DEVIATION = 100;
-    private int width;
-    private int height;
     private Coordinate pos;
 
-    public Viewbox(int width, int height) {
-        this(width, height, new Coordinate(0, 0));
-    }
-
-    public Viewbox(int width, int height, Coordinate coordinate) {
-        this.width = width;
-        this.height = height;
+    public Viewbox(Coordinate coordinate) {
         this.pos = coordinate;
     }
 
@@ -43,19 +36,11 @@ public class Viewbox {
     }
 
     public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
+        return (int) Container.getInstance().getCanvas().getWidth();
     }
 
     public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
+        return (int) Container.getInstance().getCanvas().getHeight();
     }
 
     public Coordinate getPos() {

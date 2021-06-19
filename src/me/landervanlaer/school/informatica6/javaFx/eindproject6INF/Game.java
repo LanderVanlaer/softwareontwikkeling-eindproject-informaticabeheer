@@ -21,10 +21,8 @@ import java.util.List;
 public class Game implements Drawable, Updatable {
     public static final int PLAYER_MAX_HP = 100;
     public static final int PLAYER_MASS = 70;
-    public static final int PLAYFIELD_HEIGHT = 5000;
-    public static final int PLAYFIELD_WIDTH = 5000;
-    public static final int VIEWBOX_HEIGHT = 785;
-    public static final int VIEWBOX_WIDTH = 1190;
+    public static final int PLAYFIELD_HEIGHT = 10000;
+    public static final int PLAYFIELD_WIDTH = 10000;
     public static final int AMOUNT_OF_BOTS = 20;
     public static final double MU = .95;
 
@@ -41,7 +39,7 @@ public class Game implements Drawable, Updatable {
         this.playField = new Playfield(PLAYFIELD_WIDTH, PLAYFIELD_HEIGHT);
         final Coordinate middle = new Coordinate(getPlayField().getWidth() / 2D, getPlayField().getHeight() / 2D);
         this.player = new Player(PLAYER_MAX_HP, middle, PLAYER_MASS);
-        this.viewBox = new Viewbox(VIEWBOX_WIDTH, VIEWBOX_HEIGHT, new Coordinate(middle.getX() - VIEWBOX_WIDTH / 2D, middle.getY() - VIEWBOX_HEIGHT / 2D));
+        this.viewBox = new Viewbox(new Coordinate(middle.getX(), middle.getY()));
         this.bullets = new LinkedList<>();
         this.entities = new LinkedList<>();
     }
