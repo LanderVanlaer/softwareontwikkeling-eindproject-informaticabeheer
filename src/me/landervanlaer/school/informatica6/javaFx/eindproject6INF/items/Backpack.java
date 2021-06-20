@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Backpack extends Item {
@@ -19,7 +19,7 @@ public class Backpack extends Item {
 
     public Backpack(double maxMass, double weight) {
         super(weight);
-        this.items = new ArrayList<>();
+        this.items = new LinkedList<>();
         this.maxMass = maxMass <= 1 ? 1 : maxMass;
     }
 

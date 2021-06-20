@@ -1,5 +1,6 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -39,6 +40,8 @@ public class Container implements Updatable {
     private final ErrorMessageDisplayer errorMessageDisplayer = new ErrorMessageDisplayer();
     private Scene scene;
 
+    @FXML
+    private SplitPane sidePanel;
     @FXML
     private Pane canvasAnchorPane;
     @FXML
@@ -96,6 +99,9 @@ public class Container implements Updatable {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static void updateListToOtherList(List needToBeChanged, List items) {
+        if(items.size() == 0)
+            needToBeChanged.clear();
+
         needToBeChanged.removeIf(o -> !items.contains(o));
         items.forEach(o -> {
             if(!needToBeChanged.contains(o)) {
@@ -129,41 +135,9 @@ public class Container implements Updatable {
         applyColumnCellValueFactories(backpackTable);
         applyColumnCellValueFactories(pickUpTable);
 
-        pickUpTable.setOnMouseClicked(event -> {
-            if(pickUpTable.getSelectionModel().getSelectedIndex() < 0)
-                return;
+        pickUpTable.setOnMouseClicked(this::pickUpTableMouseClickHandler);
 
-            final Item item = (Item) pickUpTable.getItems().get(pickUpTable.getSelectionModel().getSelectedIndex());
-
-            try {
-                Game.getInstance().getPlayer().addItemToBackpack(item);
-                pickUpTable.getItems().remove(pickUpTable.getSelectionModel().getSelectedIndex());
-            } catch(Entity.NoBackpack ignored) {
-                showError("U heeft geen rugzak om dit item aan toe te voegen!");
-            } catch(Backpack.MaxMassExceeded ignored) {
-                showError("De rugzak zit vol!");
-            }
-
-            pickUpTable.getSelectionModel().clearSelection();
-        });
-
-        backpackTable.setOnMouseClicked(event -> {
-            if(backpackTable.getSelectionModel().getSelectedIndex() < 0)
-                return;
-
-            final Item item = (Item) backpackTable.getItems().remove(backpackTable.getSelectionModel().getSelectedIndex());
-
-            final Backpack backpack = Game.getInstance().getPlayer().getBackpack();
-            if(backpack == null)
-                return;
-
-            try {
-                backpack.dropItem(item);
-            } catch(IndexOutOfBoundsException ignored) {
-            }
-
-            backpackTable.getSelectionModel().clearSelection();
-        });
+        backpackTable.setOnMouseClicked(this::backpackTableMouseClickHandler);
 
         final Player player = Game.getInstance().getPlayer();
         handsChoice.setOnAction((ActionEvent event) -> {
@@ -375,5 +349,56 @@ public class Container implements Updatable {
 
     public ErrorMessageDisplayer getErrorMessageDisplayer() {
         return errorMessageDisplayer;
+    }
+
+    public void pauseGame() {
+        Game.getInstance().setPause(!Game.getInstance().isPause());
+        sidePanel.setDisable(Game.getInstance().isPause());
+    }
+
+    public void startNewGame() {
+        Game.startNewGame();
+        sidePanel.setDisable(Game.getInstance().isPause());
+        initialize(getScene());
+    }
+
+    public void close() {
+        Platform.exit();
+    }
+
+    private void backpackTableMouseClickHandler(MouseEvent event) {
+        if(backpackTable.getSelectionModel().getSelectedIndex() < 0)
+            return;
+
+        final Item item = (Item) backpackTable.getItems().remove(backpackTable.getSelectionModel().getSelectedIndex());
+
+        final Backpack backpack = Game.getInstance().getPlayer().getBackpack();
+        if(backpack == null)
+            return;
+
+        try {
+            backpack.dropItem(item);
+        } catch(IndexOutOfBoundsException ignored) {
+        }
+
+        backpackTable.getSelectionModel().clearSelection();
+    }
+
+    private void pickUpTableMouseClickHandler(MouseEvent event) {
+        if(pickUpTable.getSelectionModel().getSelectedIndex() < 0)
+            return;
+
+        final Item item = (Item) pickUpTable.getItems().get(pickUpTable.getSelectionModel().getSelectedIndex());
+
+        try {
+            Game.getInstance().getPlayer().addItemToBackpack(item);
+            pickUpTable.getItems().remove(pickUpTable.getSelectionModel().getSelectedIndex());
+        } catch(Entity.NoBackpack ignored) {
+            showError("U heeft geen rugzak om dit item aan toe te voegen!");
+        } catch(Backpack.MaxMassExceeded ignored) {
+            showError("De rugzak zit vol!");
+        }
+
+        pickUpTable.getSelectionModel().clearSelection();
     }
 }

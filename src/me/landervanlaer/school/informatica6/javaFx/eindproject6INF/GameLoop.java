@@ -17,8 +17,11 @@ public class GameLoop extends AnimationTimer {
 
         setPrevNanoTime(getNowNanoTime());
         setNowNanoTime(now);
-        Container.getInstance().update();
-        Container.getInstance().draw();
+
+        if(!Game.getInstance().isPause()) {
+            Container.getInstance().update();
+            Container.getInstance().draw();
+        }
     }
 
     @Override

@@ -26,13 +26,14 @@ public class Game implements Drawable, Updatable {
     public static final int AMOUNT_OF_BOTS = 20;
     public static final double MU = .95;
 
-    private final static Game game = new Game();
+    private static Game game = new Game();
     public final List<Entity> entities;
     private final List<Item> items;
     private final Viewbox viewBox;
     private final List<Bullet> bullets;
     private Playfield playField;
     private Player player;
+    private boolean pause;
 
     private Game() {
         this.items = new LinkedList<>();
@@ -42,8 +43,13 @@ public class Game implements Drawable, Updatable {
         this.viewBox = new Viewbox(new Coordinate(middle.getX(), middle.getY()));
         this.bullets = new LinkedList<>();
         this.entities = new LinkedList<>();
+        this.pause = false;
     }
 
+
+    public static void startNewGame() {
+        Game.game = new Game();
+    }
 
     public static Game getInstance() {
         return game;
@@ -141,5 +147,13 @@ public class Game implements Drawable, Updatable {
 
     public List<Entity> getEntities() {
         return entities;
+    }
+
+    public boolean isPause() {
+        return pause;
+    }
+
+    public void setPause(boolean pause) {
+        this.pause = pause;
     }
 }
