@@ -12,6 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.objects.Updatable;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.ErrorMessageDisplayer;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.GameLoop;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Entity;
@@ -35,6 +36,7 @@ public class Container implements Updatable {
     private final List<KeyCode> keys = new LinkedList<>();
     private final GameLoop gameLoop = new GameLoop();
     private final Coordinate cursor = new Coordinate(0, 0);
+    private final ErrorMessageDisplayer errorMessageDisplayer = new ErrorMessageDisplayer();
     private Scene scene;
 
     @FXML
@@ -221,8 +223,10 @@ public class Container implements Updatable {
     }
 
     public void showError(String message) {
-        // TODO: 14/05/2021 showError
-        System.out.println(message);
+        if(message == null || message.isBlank())
+            return;
+
+        getErrorMessageDisplayer().addMessage(message);
     }
 
     @Override
@@ -316,6 +320,9 @@ public class Container implements Updatable {
         }
         canvas.getGraphicsContext2D().setFont(new Font(15));
         Draw.text(canvas.getGraphicsContext2D(), String.valueOf(getFps()), new Coordinate(10, 25));
+
+        //ERROR-MESSAGE
+        getErrorMessageDisplayer().draw(canvas.getGraphicsContext2D());
     }
 
     public int getFps() {
@@ -364,5 +371,9 @@ public class Container implements Updatable {
 
     public void setScene(Scene scene) {
         this.scene = scene;
+    }
+
+    public ErrorMessageDisplayer getErrorMessageDisplayer() {
+        return errorMessageDisplayer;
     }
 }
