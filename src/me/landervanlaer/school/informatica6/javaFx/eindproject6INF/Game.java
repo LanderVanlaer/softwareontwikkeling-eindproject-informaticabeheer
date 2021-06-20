@@ -16,7 +16,6 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-// TODO: 27/04/2021 friction
 
 public class Game implements Drawable, Updatable {
     public static final int PLAYER_MAX_HP = 100;
@@ -91,7 +90,8 @@ public class Game implements Drawable, Updatable {
 
     @Override
     public void update() {
-        // TODO: 27/04/2021
+        if(getPlayer().isDead())
+            gameOver();
         spawnBotsIfNeeded();
 
         getPlayer().update();
@@ -109,6 +109,10 @@ public class Game implements Drawable, Updatable {
 
         getBullets().removeIf(Bullet::isDelete);
         getBullets().forEach(Bullet::update);
+    }
+
+    private void gameOver() {
+        Container.getInstance().showError("GAME OVER");
     }
 
     private void spawnBotsIfNeeded() {
