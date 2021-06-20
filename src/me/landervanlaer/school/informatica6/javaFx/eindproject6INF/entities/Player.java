@@ -5,6 +5,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import me.landervanlaer.math.Angle;
 import me.landervanlaer.math.Coordinate;
+import me.landervanlaer.math.Number;
 import me.landervanlaer.math.Vector;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Viewbox;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 public class Player extends Entity {
     private static final double MAX_SURROUNDING_RADIUS = 100;
+    private final Boost boost = new Boost();
 
     public Player(int maxHp, Coordinate pos, double mass) {
         super(maxHp, pos, mass);
@@ -79,6 +81,7 @@ public class Player extends Entity {
     public void update() {
         final List<KeyCode> keys = Container.getInstance().getKeys();
 
+        boolean boostKeyPressed = false;
         Vector vector = new Vector();
         for(KeyCode key : keys) {
             switch(key) {
@@ -93,12 +96,25 @@ public class Player extends Entity {
                 case A, Q -> getAngle().setDegrees(getAngle().getDegrees() - Entity.ROTATION_SPEED * Container.getInstance().getGameLoop().getFrameTimeSeconds());
                 case D -> getAngle().setDegrees(getAngle().getDegrees() + Entity.ROTATION_SPEED * Container.getInstance().getGameLoop().getFrameTimeSeconds());
                 case SPACE -> useAttack();
+                case SHIFT -> boostKeyPressed = true;
             }
         }
+
         if(!vector.isZero())
             vector.setMag(Entity.MOVEMENT_SPEED);
+
+        if(boostKeyPressed) {
+            try {
+                getBoost().use(vector);
+            } catch(Boost.BoostTooLowException e) {
+                Container.getInstance().showError(e.getMessage());
+                getBoost().fill();
+            }
+        } else getBoost().fill();
+
         applyForce(vector);
 
+        // ------ VIEWBOX ------ //
         final Viewbox viewbox = Game.getInstance().getViewBox();
         viewbox.getPos().setX(getPos().getX() - viewbox.getWidth() / 2D);
         viewbox.getPos().setY(getPos().getY() - viewbox.getHeight() / 2D);
@@ -156,5 +172,52 @@ public class Player extends Entity {
                         && getPos().getY() - MAX_SURROUNDING_RADIUS < getPos().getY()
                         && getPos().getY() + MAX_SURROUNDING_RADIUS > getPos().getY()
                         && item.getPos().getDistanceBetween(getPos()) < MAX_SURROUNDING_RADIUS).collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    public Boost getBoost() {
+        return boost;
+    }
+
+    public static class Boost {
+        public static final double DEFLATE_PER_SECOND = .2;
+        public static final double FILLING_PER_SECOND = .1;
+        public static double MOVEMENT_SPEED_BOOST_AMPLIFIER = 1.5;
+        private double percentage;
+
+        public Boost() {
+            this(1);
+        }
+
+        public Boost(double percentage) {
+            this.percentage = percentage;
+        }
+
+        public void use(Vector speed) throws BoostTooLowException {
+            final double toBeDeflated = DEFLATE_PER_SECOND * Container.getInstance().getGameLoop().getFrameTimeSeconds();
+
+            if(getPercentage() - toBeDeflated < 0)
+                throw new BoostTooLowException();
+
+            speed.mult(MOVEMENT_SPEED_BOOST_AMPLIFIER);
+            setPercentage(getPercentage() - toBeDeflated);
+        }
+
+        public void fill() {
+            setPercentage(getPercentage() + FILLING_PER_SECOND * Container.getInstance().getGameLoop().getFrameTimeSeconds());
+        }
+
+        public double getPercentage() {
+            return percentage;
+        }
+
+        private void setPercentage(double percentage) {
+            this.percentage = Number.constrain(percentage, 0, 1);
+        }
+
+        public static class BoostTooLowException extends RuntimeException {
+            public BoostTooLowException() {
+                super("Boost Too Low");
+            }
+        }
     }
 }

@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
             minWidth="-Infinity"
-            prefHeight="810.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/11.0.1"
+            prefHeight="810.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/11.0.1"
             fx:controller="me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Container">
   <top>
     <MenuBar fx:id="menuBar" prefHeight="20.0" prefWidth="628.0" BorderPane.alignment="CENTER">
@@ -72,8 +72,9 @@
     </SplitPane>
   </right>
   <center>
-    <Pane fx:id="canvasAnchorPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-      <Canvas fx:id="canvas" height="400" onMouseClicked="#canvasClick" width="400"/>
+    <Pane fx:id="canvasAnchorPane" minHeight="475.0" minWidth="200.0" prefHeight="496.0" prefWidth="819.0"
+          BorderPane.alignment="CENTER">
+      <Canvas fx:id="canvas" height="100" onMouseClicked="#canvasClick" width="100"/>
     </Pane>
   </center>
 </BorderPane>

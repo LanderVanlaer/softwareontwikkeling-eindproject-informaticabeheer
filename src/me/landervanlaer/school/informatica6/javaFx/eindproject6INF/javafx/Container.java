@@ -220,7 +220,7 @@ public class Container implements Updatable {
         canvas.setHeight(canvasAnchorPane.getHeight());
     }
 
-    private void showError(String message) {
+    public void showError(String message) {
         // TODO: 14/05/2021 showError
         System.out.println(message);
     }
@@ -304,6 +304,10 @@ public class Container implements Updatable {
                 }
             }
         }
+
+        //BOOST
+        boostBar.setProgress(player.getBoost().getPercentage());
+
 
         // FPS-counter
         if(getGameLoop().getNowNanoTime() - getPrevFpsUpdateTime() > FPS_UPDATE_TIME) {
