@@ -1,83 +1,89 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items;
 
+import me.landervanlaer.math.Coordinate;
+import me.landervanlaer.math.Number;
+import me.landervanlaer.objects.Drawable;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.config.ConfigHandler;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Entity;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.TableItem;
 
-import java.util.Random;
-
-abstract public class Item {
-    protected static final Random RANDOM = new Random();
-
+public abstract class Item implements Drawable, TableItem {
     /**
-     * A unique number that identifies the element
+     * The mass of the element
      */
-    private final long identification;
-    /**
-     * The weight of the element
-     */
-    private final double weight;
+    private final double mass;
     /**
      * The hero who owns the item
      */
     private Entity holder;
 
-    public Item(double weight) {
-        if(weight < 0) weight = 0;
+    private Coordinate pos;
 
-        this.weight = weight;
-        this.identification = generateIdentification();
+    public Item(double mass, Coordinate pos) {
+        if(mass < 0) mass = 0;
+        this.mass = mass;
+        this.pos = pos;
     }
 
-    /**
-     * Generates a random number for the {@link #identification}
-     *
-     * @return A random identification number
-     * @see #identification
-     * @see #canHaveIdentification(long)
-     */
-    protected long generateIdentification() {
-        long i;
-        do i = RANDOM.nextInt(); while(!canHaveIdentification(i));
-        return i;
+    public Item(double mass) {
+        this(mass, null);
     }
 
-    /**
-     * Tells whether the given number is a valid weight
-     *
-     * @param weight The number that has to be checked
-     * @return Wheter it is a valid weight for a weapon
-     * @see #weight
-     */
-    public boolean isValidWeight(long weight) {
-        return weight >= 0;
+    @Override
+    public String getName() {
+        final String name = getClass().getSimpleName();
+        return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
     }
 
-    /**
-     * Tells whether the given number is a valid identification number
-     *
-     * @param identification The number that has to be checked
-     * @return Wheter it is a valid identification number
-     * @see #identification
-     * @see #generateIdentification()
-     */
-    abstract protected boolean canHaveIdentification(long identification);
-
-    public void destroy() {
-        this.setHolder(null);
+    public double getMass() {
+        return mass;
     }
 
-    public long getIdentification() {
-        return identification;
+    @Override
+    public String toString() {
+        return getName();
     }
 
-    public double getWeight() {
-        return weight;
+    public void drop() {
+        if(getHolder() != null)
+            drop(getHolder().getPos());
+    }
+
+    public void drop(Coordinate pos) {
+        final int SPAWN_DEVIATION_PX = ConfigHandler.getInt("PlayField.SPAWN_DEVIATION_PX");
+
+        if(pos == null)
+            return;
+
+        final int x = (int) pos.getX();
+        final int y = (int) pos.getY();
+        setPos(new Coordinate(
+                Number.getRandom(x - SPAWN_DEVIATION_PX, x + SPAWN_DEVIATION_PX),
+                Number.getRandom(y - SPAWN_DEVIATION_PX, y + SPAWN_DEVIATION_PX)));
+
+        Game.getInstance().getItems().add(this);
+    }
+
+    public boolean canBeDrawn() {
+        return getHolder() == null && getPos() != null;
+    }
+
+    public Coordinate getPos() {
+        return pos;
+    }
+
+    public void setPos(Coordinate pos) {
+        this.pos = pos;
+        this.holder = null;
     }
 
     public Entity getHolder() {
         return holder;
     }
 
-    public void setHolder(Entity entity) {
-        this.holder = entity;
+    public void setHolder(Entity holder) {
+        this.holder = holder;
+        this.pos = null;
     }
 }

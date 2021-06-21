@@ -1,44 +1,95 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items;
 
-import me.landervanlaer.util.lists.LinkedList;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import me.landervanlaer.math.Coordinate;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.config.ConfigHandler;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Backpack extends Item {
     private final List<Item> items;
-    private final double maxWeight;
+    private final double maxMass;
 
-    public Backpack(double maxWeight, double weight, Item... items) {
-        this(maxWeight, weight);
+    public Backpack(double maxMass, double weight, Item... items) {
+        this(maxMass, weight);
         for(Item item : items) if(item != null) this.items.add(item);
     }
 
-    public Backpack(double maxWeight, double weight) {
+    public Backpack(double maxMass, double weight) {
         super(weight);
         this.items = new LinkedList<>();
-        this.maxWeight = maxWeight <= 1 ? 1 : maxWeight;
+        this.maxMass = maxMass <= 1 ? 1 : maxMass;
     }
 
     @Override
-    protected boolean canHaveIdentification(long identification) {
-        return identification > 0;
+    public void draw(GraphicsContext gc) {
+        gc.setFill(Color.PURPLE);
+        gc.setLineWidth(4);
+        gc.setStroke(Color.BLACK);
+        Draw.fillCircle(gc, getPos(), ConfigHandler.getDouble("items.Item.WIDTH"));
     }
 
     @Override
-    public double getWeight() {
-        return super.getWeight() + getWeightInBackpack();
+    public double getMass() {
+        return super.getMass() + getMassInBackpack();
     }
 
-    public double getWeightInBackpack() {
-        return getItems().stream().mapToDouble(Item::getWeight).sum();
+    @Override
+    public String toString() {
+        return "%s (%s)".formatted(getName(), getMaxMass());
+    }
+
+    @Override
+    public void drop(Coordinate pos) {
+        super.drop(pos);
+        while(getItems().size() > 0) {
+            dropItem(0);
+        }
+    }
+
+    @Override
+    public String getExtra() {
+        return getMassInBackpack() + " / " + getMaxMass();
+    }
+
+    public void dropItem(int i) {
+        if(!isValidIndexOfItems(i))
+            throw new IndexOutOfBoundsException();
+
+        final Item item = getItems().remove(i);
+        if(getHolder() == null)
+            item.drop(getPos());
+        else
+            item.drop(getHolder().getPos());
+    }
+
+    public void dropItem(Item item) {
+        dropItem(getItems().indexOf(item));
+    }
+
+    public double getMassInBackpack() {
+        if(getItems().size() > 0)
+            return getItems().stream().mapToDouble(Item::getMass).sum();
+        return 0;
     }
 
     public boolean canAddItem(Item item) {
-        return getWeightInBackpack() + item.getWeight() < getMaxWeight();
+        return getMassInBackpack() + item.getMass() <= getMaxMass();
     }
 
     public Item takeItem(int i) throws IndexOutOfBoundsException {
         if(!isValidIndexOfItems(i)) throw new IndexOutOfBoundsException();
+        return getItems().remove(i);
+    }
+
+    public void removeItem(Item item) {
+        getItems().remove(item);
+    }
+
+    public Item removeItem(int i) {
         return getItems().remove(i);
     }
 
@@ -47,42 +98,30 @@ public class Backpack extends Item {
         return getItems().get(i);
     }
 
-    public void addItem(Item item) throws NullPointerException, MaxWeightExceeded {
+    public void addItem(Item item) throws NullPointerException, IllegalArgumentException {
         if(item == null)
             throw new NullPointerException();
         if(!canAddItem(item))
-            throw new MaxWeightExceeded();
+            throw new MaxMassExceeded();
+        if(item == this)
+            throw new IllegalArgumentException("Cannot put the backpack inside itself");
+
+        item.setHolder(getHolder());
         getItems().add(item);
-    }
-
-    public Item getItemByIdentification(long id) throws ItemNotFound {
-        for(Item item : getItems())
-            if(item.getIdentification() == id)
-                return item;
-        throw new ItemNotFound();
-    }
-
-    public boolean hasItemWithIdentification(long id) {
-        for(Item item : getItems()) if(item.getIdentification() == id) return true;
-        return false;
     }
 
     public boolean isValidIndexOfItems(int i) {
         return i >= 0 && i < getItems().size();
     }
 
-    public double getMaxWeight() {
-        return maxWeight;
+    public double getMaxMass() {
+        return maxMass;
     }
 
-    private List<Item> getItems() {
+    public List<Item> getItems() {
         return items;
     }
 
-    public static class ItemNotFound extends IllegalArgumentException {
-    }
-
-
-    public static class MaxWeightExceeded extends IllegalArgumentException {
+    public static class MaxMassExceeded extends IllegalArgumentException {
     }
 }

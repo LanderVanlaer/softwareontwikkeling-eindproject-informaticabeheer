@@ -1,229 +1,194 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities;
 
 import me.landervanlaer.math.Number;
+import me.landervanlaer.math.*;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.AnchorPoint;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.GameLoop;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.config.ConfigHandler;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Armor;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Backpack;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.Weapon;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.Bullet;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.magazines.Magazine;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Container;
 
-import java.text.MessageFormat;
-import java.util.HashMap;
+import java.util.EnumMap;
 
-public abstract class Entity {
-    public static final int DEFAULT_STRENGTH = 10;
+abstract public class Entity extends Mover {
+    private final int maxHp;
+    private final EnumMap<AnchorPoint, Item> anchorPoints;
+    private Angle angle;
+    private int hp;
 
-    private final HashMap<AnchorPoint, Item> anchors;
-    private String name;
-    private double strength;
-    private boolean fighting;
-    private int hitpoints;
-    private int maxHitpoints;
-    private int protection;
-
-    protected Entity(String name, int maxHitpoints, int protection) {
-        if(!canHaveName(name))
-            throw new IllegalArgumentException("The given name is not valid");
-        if(maxHitpoints <= 0)
-            throw new IllegalArgumentException("MaxHitpoints Cannot be less than or equal to 0");
-        this.name = name;
-        this.maxHitpoints = maxHitpoints;
-        this.hitpoints = this.maxHitpoints;
-        this.strength = DEFAULT_STRENGTH;
-        this.fighting = false;
-        this.protection = protection;
-        anchors = new HashMap<>();
+    public Entity(int maxHp, Coordinate pos, double mass) {
+        super(pos, mass);
+        if(maxHp <= 0) throw new IllegalArgumentException("MaxHp can not be 0 or negative");
+        this.maxHp = maxHp;
+        this.hp = this.maxHp;
+        this.anchorPoints = new EnumMap<>(AnchorPoint.class);
+        final Backpack backpack = new Backpack(ConfigHandler.getDouble("entities.Entity.DEFAULT_BACKPACK_MASS_MAX"), ConfigHandler.getDouble("entities.Entity.DEFAULT_BACKPACK_MASS"));
+        backpack.setHolder(this);
+        this.anchorPoints.put(AnchorPoint.BACK, backpack);
+        this.angle = new Angle();
     }
 
-    public static boolean isValidMaxHitpoints(int i) {
-        return i > 0;
-    }
-
-    public static boolean isValidProtection(int i) {
-        return i >= 0 && i < 20;
-
-    }
-
-    public HashMap<AnchorPoint, Item> getAnchors() {
-        return anchors;
-    }
-
-    public boolean canHaveHitpoints(int i) {
-        return i >= 0 && i <= getMaxHitpoints() && (isFighting() || Number.isPrimeNumber(i));
-    }
-
-    public boolean canHaveItem(Item item) {
-        if(getAnchors().containsValue(item)) return true;
-
-        if(item instanceof Armor) {
-            // MAX 2 ARMORS
-            return getAnchors().values().stream().filter(i -> i instanceof Armor).count() < 2;
+    @Override
+    public void update() {
+        //check if there is a Backpack
+        if(!(getAnchorPoints().get(AnchorPoint.BACK) instanceof Backpack)) {
+            final Backpack backpack = new Backpack(ConfigHandler.getDouble("entities.Entity.DEFAULT_BACKPACK_MASS_MAX"), ConfigHandler.getDouble("entities.Entity.DEFAULT_BACKPACK_MASS"));
+            getAnchorPoints().put(AnchorPoint.BACK, backpack);
         }
 
-        return getRemainingCapacity() - item.getWeight() >= 0;
+        Game.getInstance().getPlayField().stayInBoundaries(getPos());
+
+        applyForce(Game.getFriction(this));
+
+        super.update();
     }
 
-    public int getRemainingCapacity() {
-        return getCapacity() - getTotalCarryingWeight();
+    @Override
+    public void applyForce(Vector force) {
+        final GameLoop gameLoop = Container.getInstance().getGameLoop();
+//        System.out.println(gameLoop.getFrameTime() + " / " + gameLoop.getFrameTimeMultiplier());
+        force.mult(gameLoop.getFrameTimeSeconds());
+        super.applyForce(force);
     }
 
-    public int getTotalCarryingWeight() {
-        return (int) getAnchors().values().stream().mapToDouble(Item::getWeight).sum();
+    @Override
+    public double getMass() {
+        double mass = super.getMass();
+        mass += getAnchorPoints().values().stream().mapToDouble(Item::getMass).sum();
+        return mass;
     }
 
-    public void throwItem(AnchorPoint anchorPoint) {
-        final Item item = takeItem(anchorPoint);
-        if(item != null) item.destroy();
-    }
+    public void hit(Bullet bullet) {
+        bullet.stop();
 
-    public void swapItems(AnchorPoint a1, AnchorPoint a2) {
-        final Item temp = getAnchors().put(a1, getAnchors().get(a2));
-        getAnchors().put(a2, temp);
-    }
+        int damage = bullet.getDamage();
 
-    public Backpack getBackpack(){
-        return (Backpack) getAnchors().values().stream().filter(item -> item instanceof Backpack).findFirst().orElse(null);
-    }
+        final Item bodyItem = getAnchorPoints().get(AnchorPoint.BODY);
+        if(bodyItem instanceof Armor) {
+            Armor armor = (Armor) bodyItem;
+            damage = armor.reduceProtection(damage);
 
-    public void addItem(Item item) throws NullPointerException, IllegalArgumentException {
-        if(item == null)
-            throw new NullPointerException("Item can not be null, use Entity.throwItem(AnchorPoint) instead");
-        if(!canHaveItem(item))
-            throw new IllegalArgumentException("Can not hold item with id:" + item.getIdentification());
-
-        item.setHolder(this);
-
-        for(AnchorPoint a : AnchorPoint.values()) {
-            if(getAnchors().get(a) == null) {
-                putItem(item, a);
-                return;
-            };
-        }
-
-        final Backpack backpack = getBackpack();
-        if(backpack != null && backpack.canAddItem(item)){
-            backpack.addItem(item);
-        }
-    }
-
-    public Item putItem(Item item, AnchorPoint anchorPoint) throws NullPointerException, IllegalArgumentException {
-        if(item == null)
-            throw new NullPointerException("Item can not be null, use Entity.throwItem(AnchorPoint) instead");
-        if(!canHaveItem(item))
-            throw new IllegalArgumentException("Can not hold item with id:" + item.getIdentification());
-
-        item.setHolder(this);
-
-        final Item prev = getAnchors().put(anchorPoint, item);
-
-        if(prev != null) prev.setHolder(null);
-
-        return prev;
-    }
-
-    public Item takeItem(AnchorPoint anchorPoint) {
-        final Item item = getAnchors().get(anchorPoint);
-        if(item != null)
-            item.setHolder(null);
-        return item;
-    }
-
-    public abstract void hit(Entity entity);
-
-    public void heal() {
-        setHitpoints((int) (getHitpoints() + ((double) (getMaxHitpoints() - getHitpoints()) * (Number.getRandom(0, 101) / 100D))));
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) throws IllegalArgumentException {
-        if(!canHaveName(name))
-            throw new IllegalArgumentException(MessageFormat.format("The given name \"{0}\"  can not be used", name));
-        this.name = name;
-    }
-
-    public double getStrength() {
-        return strength;
-    }
-
-    private void setStrength(double strength) {
-        this.strength = strength;
-    }
-
-    public abstract boolean canHaveName(String name);
-
-    public abstract double getStrengthOfHit();
-
-    public void multiplyStrength(int multiplier) {
-        if(multiplier != 0)
-            setStrength(getStrength() * (double) multiplier);
-    }
-
-    public void divideStrength(int denominator) {
-        if(denominator != 0)
-            setStrength(getStrength() / (double) denominator);
-    }
-
-    public boolean isFighting() {
-        return fighting;
-    }
-
-    public void setFighting(boolean fighting) {
-        this.fighting = fighting;
-        if(!fighting){
-            setHitpoints(getHitpoints());
-        }
-    }
-
-    public int getHitpoints() {
-        return hitpoints;
-    }
-
-    public void setHitpoints(int hitpoints) {
-        if(canHaveHitpoints(hitpoints)) {
-            this.hitpoints = hitpoints;
-        } else if(hitpoints <= 0) {
-            this.hitpoints = 0;
-        } else if(hitpoints > getMaxHitpoints()) {
-            if(isFighting()) {
-                this.hitpoints = getMaxHitpoints();
-            } else {
-                setHitpoints(getMaxHitpoints());
+            if(damage > 0) {
+                armor.setHolder(null);
+                this.getAnchorPoints().remove(AnchorPoint.BODY);
             }
-        } else {
-            this.hitpoints = Number.getClosestPrimeNumber(hitpoints);
         }
+
+        reduceHp(damage);
     }
 
-    public void reduceHitpoints(int hitpoints) {
-        if(hitpoints > 0)
-            setHitpoints(getHitpoints() - hitpoints);
+    public abstract void die();
+
+    public void addItemToBackpack(Item item) throws NoBackpack {
+        final Item backpack = getAnchorPoints().get(AnchorPoint.BACK);
+
+        if(!(backpack instanceof Backpack))
+            throw new NoBackpack();
+
+        ((Backpack) backpack).addItem(item);
     }
 
-    public int getMaxHitpoints() {
-        return maxHitpoints;
-    }
+    public Magazine getNewMagazine(MagazineChecker magazineChecker) {
+        for(Item item : getBackpack().getItems()) {
+            if(!(item instanceof Magazine)) continue;
 
-    public void setMaxHitpoints(int maxHitpoints) {
-        if(isValidMaxHitpoints(maxHitpoints))
-            this.maxHitpoints = maxHitpoints;
-        else {
-            this.maxHitpoints = 1;
+            final Magazine magazine = (Magazine) item;
+
+            if(magazineChecker.canHaveMagazine(magazine) && !magazine.isEmpty()) {
+                getBackpack().removeItem(magazine);
+                return magazine;
+            }
         }
+        return null;
     }
 
-    public abstract int getCapacity();
-
-    public abstract int getProtectionForHit();
-
-    public int getProtection() {
-        return protection;
+    public void reduceHp(int hp) {
+        if(hp > 0)
+            setHp(getHp() - hp);
     }
 
-    public void setProtection(int protection) {
-        if(!isValidProtection(protection))
-            throw new IllegalArgumentException();
-        this.protection = protection;
+    public Item setBackPack(Backpack backpack) {
+        backpack.setHolder(this);
+        return getAnchorPoints().put(AnchorPoint.BACK, backpack);
+    }
+
+    public Backpack getBackpack() {
+        final Item item = getAnchorPoints().get(AnchorPoint.BACK);
+        return item instanceof Backpack ? (Backpack) item : null;
+    }
+
+    public Item getHand() {
+        return getAnchorPoints().get(AnchorPoint.HAND);
+    }
+
+    public Item setHand(Weapon weapon) {
+        weapon.setHolder(this);
+        return getAnchorPoints().put(AnchorPoint.HAND, weapon);
+    }
+
+    public Armor getArmor() {
+        final Item item = getAnchorPoints().get(AnchorPoint.BODY);
+        if(item instanceof Armor)
+            return (Armor) item;
+        return null;
+    }
+
+    public Item setArmor(Armor armor) {
+        armor.setHolder(this);
+        return getAnchorPoints().put(AnchorPoint.BODY, armor);
+    }
+
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = Number.constrain(hp, 0, getMaxHp());
+    }
+
+    public EnumMap<AnchorPoint, Item> getAnchorPoints() {
+        return anchorPoints;
+    }
+
+    public void heal(int hp) {
+        if(hp > 0)
+            this.setHp(getHp() + hp);
+    }
+
+    public boolean isDead() {
+        return getHp() <= 0;
+    }
+
+    public double getHpPercentage() {
+        return (double) getHp() / (double) getMaxHp();
+    }
+
+    public abstract void useAttack();
+
+    public Angle getAngle() {
+        return angle;
+    }
+
+    public void setAngle(Angle angle) {
+        this.angle = angle;
+    }
+
+    public abstract double getbulletStartLocationRadius();
+
+    public interface MagazineChecker {
+        boolean canHaveMagazine(Magazine magazine);
+    }
+
+    public static class NoBackpack extends Exception {
     }
 }

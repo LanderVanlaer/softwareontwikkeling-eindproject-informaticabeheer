@@ -1,64 +1,157 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF;
 
-import me.landervanlaer.math.Number;
+import javafx.scene.canvas.GraphicsContext;
+import me.landervanlaer.math.Coordinate;
+import me.landervanlaer.math.Vector;
+import me.landervanlaer.objects.Drawable;
+import me.landervanlaer.objects.Updatable;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.config.ConfigHandler;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.BotFactory;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Entity;
-import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Hero;
-import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Monster;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Player;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
-import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Weapon;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.Bullet;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Container;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
-import java.text.MessageFormat;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
-public class Game {
-    public static void main(String[] args) {
-        Hero hero = new Hero("Hero O'Conner", 250);
-        hero.addItem(new Weapon(21, 15));
-        printItems(hero);
+public class Game implements Drawable, Updatable {
+    private static Game game = new Game();
+    public final List<Entity> entities;
+    private final List<Item> items;
+    private final Viewbox viewBox;
+    private final List<Bullet> bullets;
+    private Playfield playField;
+    private Player player;
+    private boolean pause;
 
-        Monster monster = new Monster("Monster Gibson", 50, 1, true);
-        printItems(monster);
-
-        System.out.println("-------------------");
-
-        Entity winner = fight(hero, monster);
-        System.out.println("Winner: " + winner.getName());
-        printItems(winner);
+    private Game() {
+        this.items = new LinkedList<>();
+        this.playField = new Playfield(ConfigHandler.getInt("Game.PLAYFIELD_WIDTH"), ConfigHandler.getInt("Game.PLAYFIELD_HEIGHT"));
+        final Coordinate middle = new Coordinate(getPlayField().getWidth() / 2D, getPlayField().getHeight() / 2D);
+        this.player = new Player(ConfigHandler.getInt("Game.PLAYER_MAX_HP"), middle, ConfigHandler.getInt("Game.PLAYER_MASS"));
+        this.viewBox = new Viewbox(new Coordinate(middle.getX(), middle.getY()));
+        this.bullets = new LinkedList<>();
+        this.entities = new LinkedList<>();
+        this.pause = false;
     }
 
-    public static void printItems(Entity entity) {
-        System.out.println();
-        System.out.println(entity.getName());
-        System.out.println("Total weight carrying: " + entity.getTotalCarryingWeight());
-        System.out.println("Total HP: " + entity.getHitpoints());
-        System.out.println("Items:");
-        for(Item item : entity.getAnchors().values()) {
-            System.out.println(MessageFormat.format("\t{0} : {1}", item.getClass().getSimpleName(), item.getIdentification()));
-        }
+
+    public static void startNewGame() {
+        Game.game = new Game();
     }
 
-    public static Entity fight(Entity entity0, Entity entity1) {
-        int i = Number.getRandom(0, 2);
-        entity0.setFighting(true);
-        entity1.setFighting(true);
-        while(entity0.getHitpoints() > 0 && entity1.getHitpoints() > 0) {
-            switch(i) {
-                case 0 -> {
-                    System.out.println(MessageFormat.format("{0} is going to hit {1}\n\t{0}\t->\t{2}hp\n\t{1}\t->\t{3}hp", entity0.getName(), entity1.getName(), entity0.getHitpoints(), entity1.getHitpoints()));
-                    entity0.hit(entity1);
-                    i = 1;
-                    System.out.println(MessageFormat.format("{0} hit {1}\n\t{0}\t->\t{2}hp\n\t{1}\t->\t{3}hp", entity0.getName(), entity1.getName(), entity0.getHitpoints(), entity1.getHitpoints()));
-                }
-                case 1 -> {
-                    System.out.println(MessageFormat.format("{1} is going to hit {0}\n\t{0}\t->\t{2}hp\n\t{1}\t->\t{3}hp", entity0.getName(), entity1.getName(), entity0.getHitpoints(), entity1.getHitpoints()));
-                    entity1.hit(entity0);
-                    i = 0;
-                    System.out.println(MessageFormat.format("{1} hit {0}\n\t{0}\t->\t{2}hp\n\t{1}\t->\t{3}hp", entity0.getName(), entity1.getName(), entity0.getHitpoints(), entity1.getHitpoints()));
-                }
+    public static Game getInstance() {
+        return game;
+    }
+
+    public static Vector getFriction(Entity entity) {
+        final Vector vector = entity.getVel().clone();
+        vector.invert();
+        vector.div(Container.getInstance().getGameLoop().getFrameTimeSeconds());
+        vector.mult(ConfigHandler.getDouble("Game.DEFAULT_FRICTION_MU"));
+        return vector;
+    }
+
+    public void initialize() {
+        this.playField.generateLoot();
+    }
+
+    @Override
+    public void draw(GraphicsContext gc) {
+        Draw.clear(gc);
+        getPlayField().draw(gc);
+        getItems().forEach(item -> {
+            if(getViewBox().isVisible(item)) {
+                item.draw(gc);
             }
-            System.out.println();
+        });
+        getEntities().forEach(entity -> {
+            if(getViewBox().isVisible(entity))
+                entity.draw(gc);
+        });
+        getBullets().forEach(bullet -> {
+            if(getViewBox().isVisible(bullet)) {
+                bullet.draw(gc);
+            }
+        });
+        getPlayer().draw(gc);
+        // TODO: 27/04/2021
+    }
+
+    @Override
+    public void update() {
+        if(getPlayer().isDead())
+            gameOver();
+        spawnBotsIfNeeded();
+
+        getPlayer().update();
+        final Iterator<Entity> entityIterator = getEntities().iterator();
+
+        while(entityIterator.hasNext()) {
+            final Entity entity = entityIterator.next();
+            if(entity.isDead()) {
+                entity.die();
+                entityIterator.remove();
+                continue;
+            }
+            entity.update();
         }
-        entity0.setFighting(false);
-        entity1.setFighting(false);
-        return entity0.getHitpoints() > 0 ? entity0 : entity1;
+
+        getBullets().removeIf(Bullet::isDelete);
+        getBullets().forEach(Bullet::update);
+    }
+
+    private void gameOver() {
+        Container.getInstance().showError("GAME OVER");
+    }
+
+    private void spawnBotsIfNeeded() {
+        for(int i = getEntities().size(); i < ConfigHandler.getInt("Game.AMOUNT_OF_BOTS"); i++) {
+            entities.add(BotFactory.generateRandom());
+        }
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public Playfield getPlayField() {
+        return playField;
+    }
+
+    public void setPlayField(Playfield playField) {
+        this.playField = playField;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Viewbox getViewBox() {
+        return viewBox;
+    }
+
+    public List<Bullet> getBullets() {
+        return bullets;
+    }
+
+    public List<Entity> getEntities() {
+        return entities;
+    }
+
+    public boolean isPause() {
+        return pause;
+    }
+
+    public void setPause(boolean pause) {
+        this.pause = pause;
     }
 }
