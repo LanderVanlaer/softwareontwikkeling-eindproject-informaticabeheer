@@ -79,7 +79,6 @@ public class Game implements Drawable, Updatable {
             }
         });
         getPlayer().draw(gc);
-        // TODO: 27/04/2021
     }
 
     @Override
