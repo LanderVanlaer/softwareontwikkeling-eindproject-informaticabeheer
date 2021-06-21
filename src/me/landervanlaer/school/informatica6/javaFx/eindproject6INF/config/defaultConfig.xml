@@ -2,7 +2,7 @@
 <config>
   <entities>
     <Bot>
-      <item key="MAX_HP" value="200" type="integer"/>
+      <item key="MAX_HP" value="500" type="integer"/>
       <item key="MIN_HP" value="50" type="integer"/>
       <item key="HP_BAR_HEIGHT" value="10" type="integer"/>
       <item key="ARMOR_SPAWN_MIN" value="10" type="integer"/>
@@ -26,7 +26,7 @@
     </Player>
   </entities>
   <Game>
-    <item key="PLAYER_MAX_HP" value="100" type="integer"/>
+    <item key="PLAYER_MAX_HP" value="200" type="integer"/>
     <item key="PLAYER_MASS" value="70" type="integer"/>
     <item key="PLAYFIELD_HEIGHT" value="10000" type="integer"/>
     <item key="PLAYFIELD_WIDTH" value="10000" type="integer"/>
@@ -38,61 +38,61 @@
       <shooters>
         <assaultRifles>
           <Ak47>
-            <item key="BULLET_VELOCITY" value="10" type="double"/>
-            <item key="FIRE_RATE" value="400" type="integer"/>
-            <item key="DAMAGE" value="26" type="integer"/>
+            <item key="BULLET_VELOCITY" value="20" type="double"/>
+            <item key="FIRE_RATE" value="600" type="integer"/>
+            <item key="DAMAGE" value="24" type="integer"/>
             <item key="WEIGHT" value="4" type="double"/>
           </Ak47>
           <M4>
             <item key="BULLET_VELOCITY" value="15" type="double"/>
             <item key="FIRE_RATE" value="450" type="integer"/>
-            <item key="DAMAGE" value="20" type="integer"/>
+            <item key="DAMAGE" value="27" type="integer"/>
             <item key="WEIGHT" value="4.4" type="double"/>
           </M4>
         </assaultRifles>
         <pistols>
           <DesertEagle>
-            <item key="BULLET_VELOCITY" value="7.5" type="double"/>
+            <item key="BULLET_VELOCITY" value="20" type="double"/>
             <item key="FIRE_RATE" value="1200" type="integer"/>
             <item key="DAMAGE" value="70" type="integer"/>
-            <item key="WEIGHT" value="1.5" type="double"/>
+            <item key="WEIGHT" value="2" type="double"/>
           </DesertEagle>
           <Glock>
             <item key="BULLET_VELOCITY" value="5" type="double"/>
-            <item key="FIRE_RATE" value="750" type="integer"/>
-            <item key="DAMAGE" value="20" type="integer"/>
+            <item key="FIRE_RATE" value="650" type="integer"/>
+            <item key="DAMAGE" value="17" type="integer"/>
             <item key="WEIGHT" value=".5" type="double"/>
           </Glock>
         </pistols>
         <submachineGuns>
           <P90>
-            <item key="BULLET_VELOCITY" value="4" type="double"/>
+            <item key="BULLET_VELOCITY" value="14" type="double"/>
             <item key="FIRE_RATE" value="300" type="integer"/>
             <item key="DAMAGE" value="8" type="integer"/>
             <item key="WEIGHT" value="2.5" type="double"/>
           </P90>
           <Uzi>
-            <item key="BULLET_VELOCITY" value="5" type="double"/>
-            <item key="FIRE_RATE" value="350" type="integer"/>
+            <item key="BULLET_VELOCITY" value="17" type="double"/>
+            <item key="FIRE_RATE" value="380" type="integer"/>
             <item key="DAMAGE" value="10" type="integer"/>
             <item key="WEIGHT" value="3.6" type="double"/>
           </Uzi>
         </submachineGuns>
         <magazines>
-          <HeavyMagazine>
-            <item key="MAX" value="24" type="integer"/>
-          </HeavyMagazine>
           <LightMagazine>
-            <item key="MAX" value="30" type="integer"/>
+            <item key="MAX" value="20" type="integer"/>
           </LightMagazine>
           <MediumMagazine>
             <item key="MAX" value="60" type="integer"/>
           </MediumMagazine>
+          <HeavyMagazine>
+            <item key="MAX" value="24" type="integer"/>
+          </HeavyMagazine>
         </magazines>
       </shooters>
     </weapons>
     <Armor>
-      <item key="PROTECTION_MAX" value="100" type="integer"/>
+      <item key="PROTECTION_MAX" value="200" type="integer"/>
     </Armor>
     <Item>
       <item key="WIDTH" value="10" type="double"/>
@@ -110,6 +110,6 @@
   </ErrorMessageDisplayer>
   <PlayField>
     <item key="SPAWN_DEVIATION_PX" value="50" type="integer"/>
-    <item key="SPAWN_FREQUENCY" value="250" type="integer"/>
+    <item key="SPAWN_FREQUENCY" value="400" type="integer"/>
   </PlayField>
 </config>

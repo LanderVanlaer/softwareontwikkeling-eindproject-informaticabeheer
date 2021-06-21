@@ -137,7 +137,7 @@ public class Player extends Entity {
 
     @Override
     public double getbulletStartLocationRadius() {
-        return getRadiusOfTriangle();
+        return getRadiusOfTriangle() + 10;
     }
 
     public void changeBackpack(Backpack backpack) {
