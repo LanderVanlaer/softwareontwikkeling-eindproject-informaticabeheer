@@ -10,7 +10,6 @@ import javax.management.modelmbean.XMLParseException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,7 +20,7 @@ public abstract class ConfigHandler {
 
     static {
         try {
-            ConfigHandler.overwriteConfig(new File("src/me/landervanlaer/school/informatica6/javaFx/eindproject6INF/config/defaultConfig.xml"));
+            ConfigHandler.overwriteConfig("defaultConfig.xml");
         } catch(ParserConfigurationException | IOException | SAXException | XMLParseException e) {
             e.printStackTrace();
         }
@@ -35,10 +34,10 @@ public abstract class ConfigHandler {
         return string1.isBlank() ? string2 : string1 + SEPARATOR + string2;
     }
 
-    public static void overwriteConfig(File file) throws ParserConfigurationException, IOException, SAXException, XMLParseException {
+    public static void overwriteConfig(String fileName) throws ParserConfigurationException, IOException, SAXException, XMLParseException {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document doc = documentBuilder.parse(file);
+        Document doc = documentBuilder.parse(ConfigHandler.class.getResourceAsStream(fileName));
         doc.getDocumentElement().normalize();
         setPropertiesTree(doc.getElementsByTagName("config").item(0).getChildNodes(), "");
     }

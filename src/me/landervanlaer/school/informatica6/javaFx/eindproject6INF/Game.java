@@ -107,6 +107,7 @@ public class Game implements Drawable, Updatable {
 
     private void gameOver() {
         Container.getInstance().showError("GAME OVER");
+        Container.getInstance().pauseGame(true);
     }
 
     private void spawnBotsIfNeeded() {

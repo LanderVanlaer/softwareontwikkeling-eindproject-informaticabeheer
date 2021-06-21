@@ -17,9 +17,6 @@
       <Menu mnemonicParsing="false" text="Edit">
         <MenuItem mnemonicParsing="false" text="Config" onAction="#openConfigContainer"/>
       </Menu>
-      <Menu mnemonicParsing="false" text="Help">
-        <MenuItem mnemonicParsing="false" text="About"/>
-      </Menu>
     </MenuBar>
   </top>
   <right>
