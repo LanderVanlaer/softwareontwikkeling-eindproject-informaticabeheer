@@ -6,16 +6,12 @@ import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.math.Number;
 import me.landervanlaer.math.Vector;
 import me.landervanlaer.objects.Drawable;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.config.ConfigHandler;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.ItemFactory;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
 public class Playfield implements Drawable {
-    public static final int SPAWN_DEVIATION_PX = 50;
-    /**
-     * The lower the value, the higher the spawn frequency.
-     */
-    public static final int SPAWN_FREQUENCY = 250;
     private final int width;
     private final int height;
 
@@ -71,9 +67,11 @@ public class Playfield implements Drawable {
     }
 
     public void generateLoot() {
-        final int amountOfLootPlaces = (int) (getWidth() * getHeight() / Math.pow(40, 2) / SPAWN_FREQUENCY);
+        final int SPAWN_DEVIATION_PX = ConfigHandler.getInt("PlayField.SPAWN_DEVIATION_PX");
+
+        final int amountOfLootPlaces = (int) (getWidth() * getHeight() / Math.pow(40, 2) / ConfigHandler.getInt("PlayField.SPAWN_FREQUENCY"));
         for(int i = 0; i < amountOfLootPlaces; i++) {
-            final Coordinate c = new Coordinate(Number.getRandom(0, Game.PLAYFIELD_WIDTH), Number.getRandom(0, Game.PLAYFIELD_HEIGHT));
+            final Coordinate c = new Coordinate(Number.getRandom(0, getWidth()), Number.getRandom(0, getHeight()));
 
             final int random = Number.getRandom(2, 6);
             for(int j = 0; j < random; j++) {

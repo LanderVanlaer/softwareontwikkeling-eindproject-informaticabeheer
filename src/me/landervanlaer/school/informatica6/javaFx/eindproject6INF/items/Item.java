@@ -4,12 +4,11 @@ import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.math.Number;
 import me.landervanlaer.objects.Drawable;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
-import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Playfield;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.config.ConfigHandler;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.entities.Entity;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.TableItem;
 
 public abstract class Item implements Drawable, TableItem {
-    public static final double WIDTH = 10;
     /**
      * The mass of the element
      */
@@ -52,14 +51,16 @@ public abstract class Item implements Drawable, TableItem {
     }
 
     public void drop(Coordinate pos) {
+        final int SPAWN_DEVIATION_PX = ConfigHandler.getInt("PlayField.SPAWN_DEVIATION_PX");
+
         if(pos == null)
             return;
 
         final int x = (int) pos.getX();
         final int y = (int) pos.getY();
         setPos(new Coordinate(
-                Number.getRandom(x - Playfield.SPAWN_DEVIATION_PX, x + Playfield.SPAWN_DEVIATION_PX),
-                Number.getRandom(y - Playfield.SPAWN_DEVIATION_PX, y + Playfield.SPAWN_DEVIATION_PX)));
+                Number.getRandom(x - SPAWN_DEVIATION_PX, x + SPAWN_DEVIATION_PX),
+                Number.getRandom(y - SPAWN_DEVIATION_PX, y + SPAWN_DEVIATION_PX)));
 
         Game.getInstance().getItems().add(this);
     }

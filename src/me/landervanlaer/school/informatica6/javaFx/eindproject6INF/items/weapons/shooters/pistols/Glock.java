@@ -1,16 +1,17 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.pistols;
 
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.config.ConfigHandler;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.BulletGenerator;
 
 public class Glock extends Pistol {
-    public static final double BULLET_VELOCITY = 5;
-    public static final int FIRE_RATE = 750;
-    public static final int DAMAGE = 20;
-    public static final double WEIGHT = .5;
     public static final String NAME = "Glock";
 
     public Glock() {
-        super(new BulletGenerator(BULLET_VELOCITY, FIRE_RATE, DAMAGE), WEIGHT);
+        super(new BulletGenerator(
+                        ConfigHandler.getDouble("items.weapons.shooters.pistols.Glock.BULLET_VELOCITY"),
+                        ConfigHandler.getInt("items.weapons.shooters.pistols.Glock.FIRE_RATE"),
+                        ConfigHandler.getInt("items.weapons.shooters.pistols.Glock.DAMAGE")),
+                ConfigHandler.getDouble("items.weapons.shooters.pistols.Glock.WEIGHT"));
     }
 
     @Override

@@ -3,6 +3,7 @@ package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import me.landervanlaer.math.Coordinate;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.config.ConfigHandler;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
 import java.util.LinkedList;
@@ -28,7 +29,7 @@ public class Backpack extends Item {
         gc.setFill(Color.PURPLE);
         gc.setLineWidth(4);
         gc.setStroke(Color.BLACK);
-        Draw.fillCircle(gc, getPos(), WIDTH);
+        Draw.fillCircle(gc, getPos(), ConfigHandler.getDouble("items.Item.WIDTH"));
     }
 
     @Override

@@ -6,6 +6,7 @@ import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.math.Number;
 import me.landervanlaer.math.Vector;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.config.ConfigHandler;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.*;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.Weapon;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.magazines.HeavyMagazine;
@@ -17,26 +18,13 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 import java.util.List;
 
 public class Bot extends Entity {
-    public static final int MAX_HP = 200;
-    public static final int MIN_HP = 50;
-    public static final int HP_BAR_HEIGHT = 10;
-    public static final int ARMOR_SPAWN_MIN = 10;
-    private static final int DRAWING_WIDTH_MIN = 20;
-    private static final int DRAWING_WIDTH_MAX = 100;
-    private static final int BULLET_LOCATION_EXTRA_RADIUS = 10;
-    public static int GO_TO_DEVIATION = 100;
-    public static int RANDOM_LOCATION_MAX = 400;
-    public static int VISION_LENGTH = 800;
-    public static int ATTACK_GO_TO_SQUARE_WIDTH = 325;
-    public static double MOVEMENT_SPEED = Entity.MOVEMENT_SPEED / 1.1;
-
     private Coordinate goTo;
     private Entity currentEnemy;
 
     public Bot(int maxHp, Coordinate pos, double mass) {
         super(maxHp, pos, mass);
 
-        final double hpPercentageOfMax = (double) getHp() / MAX_HP;
+        final double hpPercentageOfMax = (double) getHp() / ConfigHandler.getInt("entities.Bot.MAX_HP");
 
         int randomAmountOfItems;
         int maxArmorProtection;
@@ -48,7 +36,7 @@ public class Bot extends Entity {
             setBackPack(new Backpack(maxBackpackWeight, Number.getRandom(2, 10)));
 
             randomAmountOfItems = Number.getRandom(4, 12);
-            maxArmorProtection = Armor.PROTECTION_MAX;
+            maxArmorProtection = ConfigHandler.getInt("items.Armor.PROTECTION_MAX");
         } else if(hpPercentageOfMax > .33) {
             setHand(WeaponFactory.SubmachineGunFactory.generateRandom());
 
@@ -56,7 +44,7 @@ public class Bot extends Entity {
             setBackPack(new Backpack(maxBackpackWeight, Number.getRandom(2, 10)));
 
             randomAmountOfItems = Number.getRandom(2, 6);
-            maxArmorProtection = (int) (Armor.PROTECTION_MAX * .6);
+            maxArmorProtection = (int) (ConfigHandler.getInt("items.Armor.PROTECTION_MAX") * .6);
         } else {
             setHand(WeaponFactory.PistolFactory.generateRandom());
 
@@ -69,27 +57,27 @@ public class Bot extends Entity {
         final Backpack backpack = getBackpack();
         for(int i = 0; i < randomAmountOfItems; i++) {
             try {
-                backpack.addItem(ItemFactory.generateRandom(Number.getRandom(2, 10), Number.getRandom(ARMOR_SPAWN_MIN, maxArmorProtection), maxBackpackWeight));
+                backpack.addItem(ItemFactory.generateRandom(Number.getRandom(2, 10), Number.getRandom(ConfigHandler.getInt("entities.Bot.ARMOR_SPAWN_MIN"), maxArmorProtection), maxBackpackWeight));
             } catch(Backpack.MaxMassExceeded ignore) {
             }
         }
     }
 
     public static Coordinate generateRandomCoordinateAround(Coordinate pos) {
-        final double devi = GO_TO_DEVIATION * 1.4;
+        final double devi = ConfigHandler.getInt("entities.Bot.GO_TO_DEVIATION") * 1.4;
         final double xMax = Game.getInstance().getPlayField().getWidth() - devi;
         final double yMax = Game.getInstance().getPlayField().getHeight() - devi;
 
         final Coordinate coordinate = new Coordinate(
                 Number.getRandom(
-                        (int) Number.constrain(pos.getX() - RANDOM_LOCATION_MAX, devi, xMax),
-                        (int) Number.constrain(pos.getX() + RANDOM_LOCATION_MAX, devi, xMax)),
+                        (int) Number.constrain(pos.getX() - ConfigHandler.getInt("entities.Bot.RANDOM_LOCATION_MAX"), devi, xMax),
+                        (int) Number.constrain(pos.getX() + ConfigHandler.getInt("entities.Bot.RANDOM_LOCATION_MAX"), devi, xMax)),
                 Number.getRandom(
-                        (int) Number.constrain(pos.getY() - RANDOM_LOCATION_MAX, devi, yMax),
-                        (int) Number.constrain(pos.getY() + RANDOM_LOCATION_MAX, devi, yMax))
+                        (int) Number.constrain(pos.getY() - ConfigHandler.getInt("entities.Bot.RANDOM_LOCATION_MAX"), devi, yMax),
+                        (int) Number.constrain(pos.getY() + ConfigHandler.getInt("entities.Bot.RANDOM_LOCATION_MAX"), devi, yMax))
         );
 
-        if(coordinate.getDistanceBetween(pos) < GO_TO_DEVIATION)
+        if(coordinate.getDistanceBetween(pos) < ConfigHandler.getInt("entities.Bot.GO_TO_DEVIATION"))
             return generateRandomCoordinateAround(pos);
 
         return coordinate;
@@ -123,7 +111,7 @@ public class Bot extends Entity {
         final double d = getDiameter();
         Draw.fillCircle(gc, getPos(), d);
 
-        Draw.hpBar(gc, new Coordinate(getPos().getX(), getPos().getY() - d / 2D - HP_BAR_HEIGHT), getHpPercentage(), d, HP_BAR_HEIGHT);
+        Draw.hpBar(gc, new Coordinate(getPos().getX(), getPos().getY() - d / 2D - ConfigHandler.getInt("entities.Bot.HP_BAR_HEIGHT")), getHpPercentage(), d, ConfigHandler.getInt("entities.Bot.HP_BAR_HEIGHT"));
 
 //        gc.setStroke(Color.BLACK);
 //        gc.setLineWidth(2);
@@ -151,7 +139,7 @@ public class Bot extends Entity {
     }
 
     public double getDiameter() {
-        return Number.constrain(getMass() / 2D, Bot.DRAWING_WIDTH_MIN, Bot.DRAWING_WIDTH_MAX);
+        return Number.constrain(getMass() / 2D, ConfigHandler.getInt("entities.Bot.DRAWING_WIDTH_MIN"), ConfigHandler.getInt("entities.Bot.DRAWING_WIDTH_MAX"));
     }
 
     public double getRadius() {
@@ -161,13 +149,13 @@ public class Bot extends Entity {
     @Override
     public void update() {
         setCurrentEnemy(getClosestEnemy());
-        if(getGoTo() == null || getGoTo().getDistanceBetween(getPos()) <= GO_TO_DEVIATION)
+        if(getGoTo() == null || getGoTo().getDistanceBetween(getPos()) <= ConfigHandler.getInt("entities.Bot.GO_TO_DEVIATION"))
             setGoTo(Bot.generateRandomCoordinateAround(getPos()));
 
         useAttack();
 
         final Vector goToVector = new Vector(getPos(), getGoTo());
-        goToVector.setMag(Bot.MOVEMENT_SPEED);
+        goToVector.setMag(ConfigHandler.getDouble("entities.Bot.MOVEMENT_SPEED"));
 
         applyForce(goToVector);
 
@@ -196,6 +184,7 @@ public class Bot extends Entity {
         final Entity entity = getCurrentEnemy();
         if(entity == null) return;
 
+        final int ATTACK_GO_TO_SQUARE_WIDTH = ConfigHandler.getInt("entities.Bot.ATTACK_GO_TO_SQUARE_WIDTH");
         final Coordinate leftTop = new Coordinate(entity.getPos());
         leftTop.add(new Vector(-ATTACK_GO_TO_SQUARE_WIDTH, -ATTACK_GO_TO_SQUARE_WIDTH));
 
@@ -234,7 +223,7 @@ public class Bot extends Entity {
 
     @Override
     public double getbulletStartLocationRadius() {
-        return getRadius() + BULLET_LOCATION_EXTRA_RADIUS;
+        return getRadius() + ConfigHandler.getInt("entities.Bot.BULLET_LOCATION_EXTRA_RADIUS");
     }
 
     public void shootTo(Coordinate coordinate) {
@@ -248,9 +237,9 @@ public class Bot extends Entity {
     public Entity getClosestEnemy() {
         final Player player = Game.getInstance().getPlayer();
         final List<Entity> entities = Game.getInstance().getEntities();
-        final Entity closestEntity = entities.stream().filter(entity -> entity != this && entity.getPos().getDistanceBetween(getPos()) <= VISION_LENGTH).min((o1, o2) -> (int) o1.getPos().getDistanceBetween(o2.getPos())).orElse(null);
+        final Entity closestEntity = entities.stream().filter(entity -> entity != this && entity.getPos().getDistanceBetween(getPos()) <= ConfigHandler.getInt("entities.Bot.VISION_LENGTH")).min((o1, o2) -> (int) o1.getPos().getDistanceBetween(o2.getPos())).orElse(null);
 
-        if(player.getPos().getDistanceBetween(getPos()) <= VISION_LENGTH) {
+        if(player.getPos().getDistanceBetween(getPos()) <= ConfigHandler.getInt("entities.Bot.VISION_LENGTH")) {
             return closestEntity == null || player.getPos().getDistanceBetween(getPos()) < closestEntity.getPos().getDistanceBetween(getPos()) ? player : closestEntity;
         }
         return closestEntity;

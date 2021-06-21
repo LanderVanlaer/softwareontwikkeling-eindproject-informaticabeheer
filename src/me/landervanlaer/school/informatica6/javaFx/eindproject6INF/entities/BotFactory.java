@@ -4,6 +4,7 @@ import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.math.Number;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Playfield;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.config.ConfigHandler;
 
 public class BotFactory {
     public static Bot generateRandom() {
@@ -12,7 +13,7 @@ public class BotFactory {
     }
 
     public static int randomHp() {
-        return Number.getRandom(Bot.MIN_HP, Bot.MAX_HP);
+        return Number.getRandom(ConfigHandler.getInt("entities.Bot.MIN_HP"), ConfigHandler.getInt("entities.Bot.MAX_HP"));
     }
 
     public static double hpToMass(int maxHp) {

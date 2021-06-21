@@ -1,16 +1,17 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.assaultRifles;
 
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.config.ConfigHandler;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.BulletGenerator;
 
 public class M4 extends AssaultRifle {
-    public static final double BULLET_VELOCITY = 15;
-    public static final int FIRE_RATE = 450;
-    public static final int DAMAGE = 20;
-    public static final double WEIGHT = 4.4;
     public static final String NAME = "M4";
 
     public M4() {
-        super(new BulletGenerator(BULLET_VELOCITY, FIRE_RATE, DAMAGE), WEIGHT);
+        super(new BulletGenerator(
+                        ConfigHandler.getDouble("items.weapons.shooters.assaultRifles.M4.BULLET_VELOCITY"),
+                        ConfigHandler.getInt("items.weapons.shooters.assaultRifles.M4.FIRE_RATE"),
+                        ConfigHandler.getInt("items.weapons.shooters.assaultRifles.M4.DAMAGE")),
+                ConfigHandler.getDouble("items.weapons.shooters.assaultRifles.M4.WEIGHT"));
     }
 
     @Override

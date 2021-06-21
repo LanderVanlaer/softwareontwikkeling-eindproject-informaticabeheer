@@ -4,6 +4,7 @@ import com.sun.jdi.InternalException;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import me.landervanlaer.math.Number;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.config.ConfigHandler;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
@@ -38,7 +39,7 @@ public abstract class Magazine extends Item {
         gc.setFill(Color.LIGHTGRAY);
         gc.setLineWidth(4);
         gc.setStroke(Color.BLACK);
-        Draw.fillCircle(gc, getPos(), WIDTH);
+        Draw.fillCircle(gc, getPos(), ConfigHandler.getDouble("items.Item.WIDTH"));
     }
 
     @Override

@@ -5,6 +5,7 @@ import me.landervanlaer.math.*;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.AnchorPoint;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.GameLoop;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.config.ConfigHandler;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Armor;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Backpack;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
@@ -16,13 +17,6 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Contai
 import java.util.EnumMap;
 
 abstract public class Entity extends Mover {
-    /**
-     * amount of px / second
-     */
-    public static double MOVEMENT_SPEED = 400;
-    public static double ROTATION_SPEED = 120;
-    public static double DEFAULT_BACKPACK_MASS_MAX = 10;
-    public static double DEFAULT_BACKPACK_MASS = 2;
     private final int maxHp;
     private final EnumMap<AnchorPoint, Item> anchorPoints;
     private Angle angle;
@@ -34,7 +28,7 @@ abstract public class Entity extends Mover {
         this.maxHp = maxHp;
         this.hp = this.maxHp;
         this.anchorPoints = new EnumMap<>(AnchorPoint.class);
-        final Backpack backpack = new Backpack(DEFAULT_BACKPACK_MASS_MAX, DEFAULT_BACKPACK_MASS);
+        final Backpack backpack = new Backpack(ConfigHandler.getDouble("entities.Entity.DEFAULT_BACKPACK_MASS_MAX"), ConfigHandler.getDouble("entities.Entity.DEFAULT_BACKPACK_MASS"));
         backpack.setHolder(this);
         this.anchorPoints.put(AnchorPoint.BACK, backpack);
         this.angle = new Angle();
@@ -44,7 +38,7 @@ abstract public class Entity extends Mover {
     public void update() {
         //check if there is a Backpack
         if(!(getAnchorPoints().get(AnchorPoint.BACK) instanceof Backpack)) {
-            final Backpack backpack = new Backpack(DEFAULT_BACKPACK_MASS_MAX, DEFAULT_BACKPACK_MASS);
+            final Backpack backpack = new Backpack(ConfigHandler.getDouble("entities.Entity.DEFAULT_BACKPACK_MASS_MAX"), ConfigHandler.getDouble("entities.Entity.DEFAULT_BACKPACK_MASS"));
             getAnchorPoints().put(AnchorPoint.BACK, backpack);
         }
 

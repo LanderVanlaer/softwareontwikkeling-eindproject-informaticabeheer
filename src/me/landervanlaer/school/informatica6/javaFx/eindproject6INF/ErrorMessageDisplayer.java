@@ -7,14 +7,13 @@ import javafx.scene.text.TextAlignment;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.math.Number;
 import me.landervanlaer.objects.Drawable;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.config.ConfigHandler;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class ErrorMessageDisplayer implements Drawable {
-    public static final long MESSAGE_TIME = 3L * GameLoop.ONE_SECOND_NANO;
-    public static final long QUEUE_TIME = GameLoop.ONE_SECOND_NANO;
     private final Queue<ErrorMessage> messages;
     private ErrorMessage currrentMessage;
     private long startTimeShowingCurrentErrorMessage;
@@ -48,7 +47,7 @@ public class ErrorMessageDisplayer implements Drawable {
             setCurrentMessage(getNewQueuedMessage());
         }
 
-        if(getStartTimeShowingCurrentErrorMessage() < System.nanoTime() - MESSAGE_TIME) {
+        if(getStartTimeShowingCurrentErrorMessage() < System.nanoTime() - ConfigHandler.getLong("ErrorMessageDisplayer.MESSAGE_TIME")) {
             if(getCurrentMessage() != null) {
                 setCurrentMessage(null);
                 refreshCurrentMessageIfNeeded();
@@ -96,11 +95,7 @@ public class ErrorMessageDisplayer implements Drawable {
         }
 
         public boolean canBeShown(long currentNanoTime) {
-            return time() > currentNanoTime - ErrorMessageDisplayer.QUEUE_TIME;
-        }
-
-        public boolean hasToBeShownOnScreen(long currentNanoTime) {
-            return time() > currentNanoTime - ErrorMessageDisplayer.MESSAGE_TIME;
+            return time() > currentNanoTime - ConfigHandler.getLong("ErrorMessageDisplayer.QUEUE_TIME");
         }
     }
 }

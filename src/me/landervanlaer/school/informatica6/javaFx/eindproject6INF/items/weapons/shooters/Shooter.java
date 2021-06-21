@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.config.ConfigHandler;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.Weapon;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.magazines.Magazine;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.Draw;
@@ -24,7 +25,7 @@ public abstract class Shooter<M extends Magazine> extends Weapon {
         gc.setFill(Color.BLACK);
         gc.setLineWidth(4);
         gc.setStroke(Color.BLACK);
-        Draw.fillCircle(gc, getPos(), WIDTH);
+        Draw.fillCircle(gc, getPos(), ConfigHandler.getDouble("items.Item.WIDTH"));
     }
 
     @Override

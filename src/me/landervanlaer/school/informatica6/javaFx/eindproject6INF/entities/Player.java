@@ -9,6 +9,7 @@ import me.landervanlaer.math.Number;
 import me.landervanlaer.math.Vector;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Game;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Viewbox;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.config.ConfigHandler;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Backpack;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.Item;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.Weapon;
@@ -20,7 +21,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Player extends Entity {
-    private static final double MAX_SURROUNDING_RADIUS = 100;
     private final Boost boost = new Boost();
 
     public Player(int maxHp, Coordinate pos, double mass) {
@@ -32,7 +32,7 @@ public class Player extends Entity {
 
         gc.setLineWidth(1);
         gc.setStroke(new Color(0, 0, 0, 0.1));
-        Draw.strokeCircle(gc, getPos(), MAX_SURROUNDING_RADIUS * 2);
+        Draw.strokeCircle(gc, getPos(), ConfigHandler.getDouble("entities.Player.MAX_SURROUNDING_RADIUS") * 2);
 
         gc.setLineWidth(2);
         gc.setStroke(Color.BLACK);
@@ -86,22 +86,22 @@ public class Player extends Entity {
         for(KeyCode key : keys) {
             switch(key) {
                 case Z, W -> {
-                    vector.add(new Vector(0, MOVEMENT_SPEED));
+                    vector.add(new Vector(0, ConfigHandler.getDouble("entities.Entity.MOVEMENT_SPEED")));
                     vector.setAngle(getAngle());
                 }
                 case S -> {
-                    vector.add(new Vector(0, MOVEMENT_SPEED));
+                    vector.add(new Vector(0, ConfigHandler.getDouble("entities.Entity.MOVEMENT_SPEED")));
                     vector.setAngle(new Angle(getAngle().getRadians() + Math.PI));
                 }
-                case A, Q -> getAngle().setDegrees(getAngle().getDegrees() - Entity.ROTATION_SPEED * Container.getInstance().getGameLoop().getFrameTimeSeconds());
-                case D -> getAngle().setDegrees(getAngle().getDegrees() + Entity.ROTATION_SPEED * Container.getInstance().getGameLoop().getFrameTimeSeconds());
+                case A, Q -> getAngle().setDegrees(getAngle().getDegrees() - ConfigHandler.getDouble("entities.Entity.ROTATION_SPEED") * Container.getInstance().getGameLoop().getFrameTimeSeconds());
+                case D -> getAngle().setDegrees(getAngle().getDegrees() + ConfigHandler.getDouble("entities.Entity.ROTATION_SPEED") * Container.getInstance().getGameLoop().getFrameTimeSeconds());
                 case SPACE -> useAttack();
                 case SHIFT -> boostKeyPressed = true;
             }
         }
 
         if(!vector.isZero())
-            vector.setMag(Entity.MOVEMENT_SPEED);
+            vector.setMag(ConfigHandler.getDouble("entities.Entity.MOVEMENT_SPEED"));
 
         if(boostKeyPressed) {
             try {
@@ -167,11 +167,11 @@ public class Player extends Entity {
     public List<Item> getAllSurroundingItems() {
         return Game.getInstance().getItems().stream().filter(item ->
                 item.getPos() != null
-                        && getPos().getX() - MAX_SURROUNDING_RADIUS < getPos().getX()
-                        && getPos().getX() + MAX_SURROUNDING_RADIUS > getPos().getX()
-                        && getPos().getY() - MAX_SURROUNDING_RADIUS < getPos().getY()
-                        && getPos().getY() + MAX_SURROUNDING_RADIUS > getPos().getY()
-                        && item.getPos().getDistanceBetween(getPos()) < MAX_SURROUNDING_RADIUS).collect(Collectors.toCollection(LinkedList::new));
+                        && getPos().getX() - ConfigHandler.getDouble("entities.Player.MAX_SURROUNDING_RADIUS") < getPos().getX()
+                        && getPos().getX() + ConfigHandler.getDouble("entities.Player.MAX_SURROUNDING_RADIUS") > getPos().getX()
+                        && getPos().getY() - ConfigHandler.getDouble("entities.Player.MAX_SURROUNDING_RADIUS") < getPos().getY()
+                        && getPos().getY() + ConfigHandler.getDouble("entities.Player.MAX_SURROUNDING_RADIUS") > getPos().getY()
+                        && item.getPos().getDistanceBetween(getPos()) < ConfigHandler.getDouble("entities.Player.MAX_SURROUNDING_RADIUS")).collect(Collectors.toCollection(LinkedList::new));
     }
 
     public Boost getBoost() {

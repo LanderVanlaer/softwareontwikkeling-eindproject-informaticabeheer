@@ -1,21 +1,22 @@
 package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items;
 
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.Factory;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.config.ConfigHandler;
 
 public enum ItemType implements Factory.WeightHolder {
-    ARMOR(13),
-    BACKPACK(10),
-    WEAPON(17),
-    MAGAZINE(35);
+    ARMOR("items.ItemType.ARMOR"),
+    BACKPACK("items.ItemType.BACKPACK"),
+    WEAPON("items.ItemType.WEAPON"),
+    MAGAZINE("items.ItemType.MAGAZINE");
 
-    public final int weight;
+    public final String weightConfigName;
 
-    ItemType(int weight) {
-        this.weight = weight;
+    ItemType(String weightConfigName) {
+        this.weightConfigName = weightConfigName;
     }
 
     @Override
     public int getWeight() {
-        return weight;
+        return ConfigHandler.getInt(weightConfigName);
     }
 }
