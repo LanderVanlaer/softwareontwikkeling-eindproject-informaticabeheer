@@ -12,6 +12,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 
 public abstract class ConfigHandler {
@@ -103,14 +104,17 @@ public abstract class ConfigHandler {
         return Double.parseDouble(item.value());
     }
 
+    public static Collection<ConfigItem> getConfigItems() {
+        return getProperties().values();
+    }
 
     private static HashMap<String, ConfigItem> getProperties() {
         return properties;
     }
 
-    private static record ConfigItem(String key, String value, String type) {
+    public static record ConfigItem(String key, String value, String type) {
         @SuppressWarnings("ResultOfMethodCallIgnored")
-        private ConfigItem {
+        public ConfigItem {
             switch(type.toUpperCase()) {
                 case "INTEGER", "INT" -> Integer.parseInt(value);
                 case "DOUBLE" -> Double.parseDouble(value);

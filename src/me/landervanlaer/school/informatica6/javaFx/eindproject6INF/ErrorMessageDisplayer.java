@@ -89,6 +89,11 @@ public class ErrorMessageDisplayer implements Drawable {
         return messages;
     }
 
+    public void clear() {
+        getMessages().clear();
+        setCurrentMessage(null);
+    }
+
     public static record ErrorMessage(String message, long time) {
         public ErrorMessage(String message) {
             this(message, System.nanoTime());

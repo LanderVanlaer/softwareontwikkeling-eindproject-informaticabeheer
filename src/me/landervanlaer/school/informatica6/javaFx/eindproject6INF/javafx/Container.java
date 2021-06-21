@@ -3,6 +3,8 @@ package me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -11,6 +13,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import me.landervanlaer.math.Coordinate;
 import me.landervanlaer.objects.Updatable;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.ErrorMessageDisplayer;
@@ -26,9 +29,12 @@ import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.magazines.HeavyMagazine;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.magazines.LightMagazine;
 import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.items.weapons.shooters.magazines.MediumMagazine;
+import me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.config.ConfigController;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Container implements Updatable {
@@ -214,7 +220,7 @@ public class Container implements Updatable {
         healthBar.setProgress(player.getHpPercentage());
 
         final Armor armor = player.getArmor();
-        if(armor != null) armorBar.setProgress(armor.getProtectionPercentage());
+        armorBar.setProgress(armor == null ? 0 : armor.getProtectionPercentage());
 
         Game.getInstance().draw(canvas.getGraphicsContext2D());
 
@@ -351,13 +357,18 @@ public class Container implements Updatable {
         return errorMessageDisplayer;
     }
 
+    public void pauseGame(boolean pause) {
+        Game.getInstance().setPause(pause);
+        sidePanel.setDisable(pause);
+    }
+
     public void pauseGame() {
-        Game.getInstance().setPause(!Game.getInstance().isPause());
-        sidePanel.setDisable(Game.getInstance().isPause());
+        pauseGame(!Game.getInstance().isPause());
     }
 
     public void startNewGame() {
         Game.startNewGame();
+        getErrorMessageDisplayer().clear();
         sidePanel.setDisable(Game.getInstance().isPause());
         initialize(getScene());
     }
@@ -400,5 +411,29 @@ public class Container implements Updatable {
         }
 
         pickUpTable.getSelectionModel().clearSelection();
+    }
+
+    public void openConfigContainer() {
+        try {
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/me/landervanlaer/school/informatica6/javaFx/eindproject6INF/javafx/config/container.fxml")));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            ConfigController controller = loader.getController();
+            stage.setTitle("Config");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            stage.setOnCloseRequest(event -> {
+                controller.shutdown();
+                if(getScene().getWindow() instanceof Stage)
+                    ((Stage) getScene().getWindow()).show();
+                pauseGame(false);
+            });
+
+            pauseGame(true);
+            getScene().getWindow().hide();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -2,12 +2,13 @@
 
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<TableView xmlns:fx="http://javafx.com/fxml/1" fx:id="table" maxHeight="-Infinity" maxWidth="-Infinity"
-           minHeight="-Infinity"
-           minWidth="-Infinity"
-           prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/11.0.1">
+<TableView xmlns:fx="http://javafx.com/fxml/1" fx:id="table" editable="true" maxHeight="-Infinity" maxWidth="-Infinity"
+           minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0"
+           xmlns="http://javafx.com/javafx/16"
+           fx:controller="me.landervanlaer.school.informatica6.javaFx.eindproject6INF.javafx.config.ConfigController">
   <columns>
-    <TableColumn editable="false" prefWidth="150.0" sortable="false" text="Key"/>
-    <TableColumn minWidth="0.0" prefWidth="150.0" sortable="false" text="Value"/>
+    <TableColumn fx:id="tableColumnType" prefWidth="100" text="Key"/>
+    <TableColumn fx:id="tableColumnKey" prefWidth="300" text="Key"/>
+    <TableColumn fx:id="tableColumnValue" prefWidth="100" text="Value"/>
   </columns>
 </TableView>

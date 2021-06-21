@@ -15,7 +15,7 @@
         <MenuItem mnemonicParsing="false" text="Close" onAction="#close"/>
       </Menu>
       <Menu mnemonicParsing="false" text="Edit">
-        <MenuItem mnemonicParsing="false" text="Delete"/>
+        <MenuItem mnemonicParsing="false" text="Config" onAction="#openConfigContainer"/>
       </Menu>
       <Menu mnemonicParsing="false" text="Help">
         <MenuItem mnemonicParsing="false" text="About"/>
